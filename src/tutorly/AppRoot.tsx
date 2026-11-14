@@ -14,7 +14,7 @@ import "./styles/base.css";
 import "./styles/ui.css";
 import "./styles/layout.css";
 
-import { AppProvider, useApp, STORAGE_KEY } from "./store/AppStore";
+import { AppProvider, useApp, STORAGE_KEY, isStudent } from "./store/AppStore";
 import { useRoute, matchPath, useScrollTopOnRoute, navigate, Link } from "./router/router";
 import { Navbar } from "./components/nav/Navbar";
 import { SearchOverlay } from "./components/nav/SearchOverlay";
@@ -173,7 +173,10 @@ function goHowItWorks() {
 }
 
 function Footer() {
-  const { dispatch } = useApp();
+  const { state, dispatch } = useApp();
+  // Student-only destinations (messages, lessons, rescheduling) are absent
+  // from a guest's footer — the marketplace, not the student desk.
+  const student = isStudent(state);
 
   const resetDemo = () => {
     try {
@@ -225,8 +228,8 @@ function Footer() {
             <div className="foot-col">
               <Link className="foot-link" to="/browse">Find tutors</Link>
               <Link className="foot-link" to="/teach">Become a tutor</Link>
-              <Link className="foot-link" to="/messages">Messages</Link>
-              <Link className="foot-link" to="/dashboard">My lessons</Link>
+              {student ? <Link className="foot-link" to="/messages">Messages</Link> : null}
+              {student ? <Link className="foot-link" to="/dashboard">My lessons</Link> : null}
               <Link className="foot-link" to="/classroom/demo">Practice classroom</Link>
               <Link className="foot-link" to="/classroom/demo?role=tutor">Demo teacher room</Link>
               <Link className="foot-link" to="/admin">Admin console</Link>
@@ -240,7 +243,7 @@ function Footer() {
             <div className="foot-label">Support</div>
             <div className="foot-col">
               <Link className="foot-link" to="/browse">Book a trial lesson</Link>
-              <Link className="foot-link" to="/dashboard">Reschedule or cancel</Link>
+              {student ? <Link className="foot-link" to="/dashboard">Reschedule or cancel</Link> : null}
               <button type="button" className="foot-link foot-link--btn" onClick={resetDemo}>
                 <RotateCcw size={12} aria-hidden /> Reset demo data
               </button>

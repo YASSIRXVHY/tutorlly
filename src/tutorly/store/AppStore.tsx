@@ -318,6 +318,15 @@ export function unreadTotal(conversations: Conversation[]): number {
   return n;
 }
 
+/**
+ * The house rule for student-only surfaces (Messages, My lessons): a session
+ * makes you a student. Guests — and only guests — see neither the links nor
+ * the badges; deep links still land on the honest login wall inside the pages.
+ */
+export function isStudent(state: AppState): boolean {
+  return state.session !== null;
+}
+
 export function toast(
   dispatch: Dispatch<Action>,
   text: string,

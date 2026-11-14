@@ -99,6 +99,14 @@ export function TutorProfilePage({ tutorId }: { tutorId: string }) {
   };
 
   const onMessage = () => {
+    if (!state.session) {
+      // Messages are a student surface — guests get the door, not the inbox.
+      dispatch({
+        type: "openAuth",
+        notice: `Log in to message ${tutor.firstName} — your conversations live in your browser.`,
+      });
+      return;
+    }
     dispatch({ type: "ensureConversation", tutorId: tutor.id });
     navigate(`/messages?tutor=${tutor.id}`);
   };

@@ -74,6 +74,9 @@ export function ClassroomPage({ lessonId }: { lessonId: string }) {
   const lesson = state.lessons.find((l) => l.id === lessonId);
   const tutor = lesson ? tutorById(lesson.tutorId) : isDemo ? tutorById("kenji") : undefined;
   const isTutorDevice = route.query.role === "tutor";
+  // Students exit to their lessons; a guest in the practice room goes home —
+  // the student desk isn't theirs yet.
+  const leaveRoom = () => navigate(state.session ? "/dashboard" : "/");
 
   const [now, setNow] = useState(() => Date.now());
   const [phase, setPhase] = useState<"wait" | "live">("wait");
@@ -327,9 +330,15 @@ export function ClassroomPage({ lessonId }: { lessonId: string }) {
             The door you knocked on doesn't match any booking. The study record lists every real room.
           </EmptyState>
           <div className="empty-actions">
-            <button type="button" className="btn btn--primary" onClick={() => navigate("/dashboard")}>
-              Back to my lessons
-            </button>
+            {state.session ? (
+              <button type="button" className="btn btn--primary" onClick={() => navigate("/dashboard")}>
+                Back to my lessons
+              </button>
+            ) : (
+              <button type="button" className="btn btn--primary" onClick={() => navigate("/")}>
+                Back to the front page
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -480,7 +489,7 @@ export function ClassroomPage({ lessonId }: { lessonId: string }) {
     <div className="cl-root">
       <div className="container container--wide">
         <header className="cl-bar">
-          <button type="button" className="btn btn--ghost btn--sm cl-back" onClick={() => navigate("/dashboard")}>
+          <button type="button" className="btn btn--ghost btn--sm cl-back" onClick={leaveRoom}>
             <ChevronLeft size={15} aria-hidden />
             Leave
           </button>
@@ -573,7 +582,7 @@ export function ClassroomPage({ lessonId }: { lessonId: string }) {
           {endAsk ? (
             <span className="cl-endask" role="alertdialog" aria-label="Confirm ending the lesson">
               <span className="cl-endask-q">End {isDemo ? "the session" : "& file 50 minutes"}?</span>
-              <button type="button" className="btn btn--danger btn--sm" onClick={isDemo ? () => { peer.end(); navigate("/dashboard"); } : endLesson}>
+              <button type="button" className="btn btn--danger btn--sm" onClick={isDemo ? () => { peer.end(); leaveRoom(); } : endLesson}>
                 <PhoneOff size={13} aria-hidden />
                 {isDemo ? "Leave" : "End it"}
               </button>

@@ -18,7 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { Link, useRoute, navigate } from "../../router/router";
-import { useApp, unreadTotal } from "../../store/AppStore";
+import { useApp, unreadTotal, isStudent } from "../../store/AppStore";
 import { Avatar } from "../common/Avatar";
 import { cx } from "../../utils/misc";
 
@@ -26,6 +26,9 @@ export function Navbar() {
   const { state, dispatch } = useApp();
   const route = useRoute();
   const unread = unreadTotal(state.conversations);
+  // Messages and My lessons are student-only: a guest's navbar carries
+  // nothing they can't use yet — the links arrive with the login.
+  const student = isStudent(state);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -69,13 +72,17 @@ export function Navbar() {
             <Link to="/browse" className="nav-link" activeClassName="nav-link--active">
               <Compass size={15} aria-hidden /> Find tutors
             </Link>
-            <Link to="/messages" className="nav-link" activeClassName="nav-link--active">
-              <MessageCircle size={15} aria-hidden /> Messages
-              {unread > 0 ? <span className="badge">{unread}</span> : null}
-            </Link>
-            <Link to="/dashboard" className="nav-link" activeClassName="nav-link--active">
-              <CalendarCheck size={15} aria-hidden /> My lessons
-            </Link>
+            {student ? (
+              <>
+                <Link to="/messages" className="nav-link" activeClassName="nav-link--active">
+                  <MessageCircle size={15} aria-hidden /> Messages
+                  {unread > 0 ? <span className="badge">{unread}</span> : null}
+                </Link>
+                <Link to="/dashboard" className="nav-link" activeClassName="nav-link--active">
+                  <CalendarCheck size={15} aria-hidden /> My lessons
+                </Link>
+              </>
+            ) : null}
           </nav>
 
           <button type="button" className="nav-search" onClick={openSearch} aria-label="Search tutors and subjects">
@@ -190,13 +197,17 @@ export function Navbar() {
             <Link to="/browse" className={cx("nav-sheet-link", route.path === "/browse" && "nav-sheet-link--active")}>
               <Compass size={17} aria-hidden /> Find tutors
             </Link>
-            <Link to="/messages" className={cx("nav-sheet-link", route.path === "/messages" && "nav-sheet-link--active")}>
-              <MessageCircle size={17} aria-hidden /> Messages
-              {unread > 0 ? <span className="badge" style={{ marginLeft: "auto" }}>{unread}</span> : null}
-            </Link>
-            <Link to="/dashboard" className={cx("nav-sheet-link", route.path === "/dashboard" && "nav-sheet-link--active")}>
-              <CalendarCheck size={17} aria-hidden /> My lessons
-            </Link>
+            {student ? (
+              <>
+                <Link to="/messages" className={cx("nav-sheet-link", route.path === "/messages" && "nav-sheet-link--active")}>
+                  <MessageCircle size={17} aria-hidden /> Messages
+                  {unread > 0 ? <span className="badge" style={{ marginLeft: "auto" }}>{unread}</span> : null}
+                </Link>
+                <Link to="/dashboard" className={cx("nav-sheet-link", route.path === "/dashboard" && "nav-sheet-link--active")}>
+                  <CalendarCheck size={17} aria-hidden /> My lessons
+                </Link>
+              </>
+            ) : null}
             <Link to="/teach" className={cx("nav-sheet-link", route.path === "/teach" && "nav-sheet-link--active")}>
               <GraduationCap size={17} aria-hidden /> Become a tutor
             </Link>

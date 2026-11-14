@@ -5,7 +5,7 @@
  * tutors, keyboard-first (↑↓ + Enter + Esc), mouse-friendly too. Opens from
  * the navbar search button or Ctrl/Cmd+K anywhere.
  */
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import {
   Search,
   Home,
@@ -17,8 +17,9 @@ import {
   ArrowRight,
   GraduationCap,
   ShieldCheck,
+  LogIn,
 } from "lucide-react";
-import { useApp } from "../../store/AppStore";
+import { useApp, isStudent } from "../../store/AppStore";
 import { navigate } from "../../router/router";
 import { TUTORS, tutorSubjects } from "../../data/tutors";
 import { CATEGORIES, SUBJECTS } from "../../data/subjects";
@@ -47,6 +48,10 @@ export function SearchOverlay() {
   const listRef = useRef<HTMLDivElement>(null);
 
   const close = () => dispatch({ type: "setSearch", open: false });
+  const openAuth = useCallback(() => dispatch({ type: "openAuth" }), [dispatch]);
+  // Student-only pages (Messages, My lessons) only surface for students;
+  // guests are offered the login instead.
+  const student = isStudent(state);
 
   // Global shortcut: Ctrl/Cmd + K toggles.
   useEffect(() => {
@@ -69,7 +74,7 @@ export function SearchOverlay() {
     }
   }, [open]);
 
-  const entries = useMemo<Entry[]>(() => buildEntries(q), [q]);
+  const entries = useMemo<Entry[]>(() => buildEntries(q, student, openAuth), [q, student, openAuth]);
 
   useEffect(() => {
     setCursor((c) => Math.min(c, Math.max(0, entries.length - 1)));
@@ -159,14 +164,20 @@ export function SearchOverlay() {
 
 /* ---------------- entries ---------------- */
 
-function buildEntries(qRaw: string): Entry[] {
+function buildEntries(qRaw: string, student: boolean, openAuth: () => void): Entry[] {
   const q = qRaw.trim().toLowerCase();
   const pages: Entry[] = [
     { id: "p-home", group: "Pages", label: "Home", icon: Home, hint: "The marketplace front page", go: () => navigate("/") },
     { id: "p-browse", group: "Pages", label: "Find tutors", icon: Compass, hint: "Filter the tutors across every subject", go: () => navigate("/browse") },
-  { id: "p-teach", group: "Pages", label: "Become a tutor", icon: GraduationCap, hint: "Apply to teach — four steps, one human review", go: () => navigate("/teach") },
-    { id: "p-messages", group: "Pages", label: "Messages", icon: MessageCircle, hint: "Conversations with your tutors", go: () => navigate("/messages") },
-    { id: "p-dash", group: "Pages", label: "My lessons", icon: CalendarCheck, hint: "Countdowns, history and reviews", go: () => navigate("/dashboard") },
+    { id: "p-teach", group: "Pages", label: "Become a tutor", icon: GraduationCap, hint: "Apply to teach — four steps, one human review", go: () => navigate("/teach") },
+    ...(student
+      ? [
+          { id: "p-messages", group: "Pages", label: "Messages", icon: MessageCircle, hint: "Conversations with your tutors", go: () => navigate("/messages") },
+          { id: "p-dash", group: "Pages", label: "My lessons", icon: CalendarCheck, hint: "Countdowns, history and reviews", go: () => navigate("/dashboard") },
+        ]
+      : [
+          { id: "p-login", group: "Pages", label: "Log in or sign up", icon: LogIn, hint: "Students get messages, lessons and booking", go: openAuth },
+        ]),
     { id: "p-demo", group: "Pages", label: "Practice classroom", icon: Presentation, hint: "The live room with whiteboard — no booking needed", go: () => navigate("/classroom/demo") },
     { id: "p-demo-teacher", group: "Pages", label: "Practice classroom — teacher side", icon: Presentation, hint: "Join the practice room as the demo teacher device", go: () => navigate("/classroom/demo?role=tutor") },
     { id: "p-admin", group: "Pages", label: "Admin console", icon: ShieldCheck, hint: "Monitor teachers, students, lessons and live rooms", go: () => navigate("/admin") },

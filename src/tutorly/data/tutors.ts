@@ -668,7 +668,8 @@ export function subjectCodeMatches(code: string, subjectId: string): boolean {
   return map[code] === subjectId;
 }
 
-/** Exam names this tutor coaches toward. */
+/** Exam names this tutor coaches toward (deduped — a tutor can teach both the
+ *  language and its exam subject, which must not double the chip). */
 export function tutorExams(t: Tutor): string[] {
   const out: string[] = [];
   for (const te of t.teaches) {
@@ -678,7 +679,7 @@ export function tutorExams(t: Tutor): string[] {
       out.push(...(LANG_EXAMS[te.subject] ?? []));
     }
   }
-  return out;
+  return [...new Set(out)];
 }
 
 /** Display names for languages that are spoken but not taught (Twi, Sichuanese…). */
