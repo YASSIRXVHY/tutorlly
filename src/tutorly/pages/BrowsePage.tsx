@@ -34,8 +34,6 @@ import {
 
 import "../styles/browse.css";
 
-const ALL_TUTORS = TUTORS.length;
-
 /** Strip every filter but keep the sort — the “browse everyone” reset. */
 const CLEAR_FILTERS: FilterPatch = {
   cat: "",
@@ -51,6 +49,9 @@ const CLEAR_FILTERS: FilterPatch = {
 export function BrowsePage() {
   const { query } = useRoute();
   const filters = useMemo(() => parseFilters(query), [query]);
+  // In-component, not module-scope: approved community tutors join the
+  // catalogue at runtime and the count stays honest without a reload.
+  const ALL_TUTORS = TUTORS.length;
 
   /* First paint is a designed skeleton — the catalogue is local, but a
      marketplace that never loads anything feels like a lie. */

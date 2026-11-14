@@ -1,0 +1,29 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "**QA Report — Tutorly \"Become a tutor\" wizard (375px)**\n\n1. **Hero heading + green accent** ✅ — \"Teach what you love. / Keep 82% of it.\" is large, bold, and \"Keep 82% of it.\" renders in readable dark-green. \"BECOME A TUTOR\" badge is legible.\n\n2. **Value-prop cards** ✅ — All three cards (Set your own rate / Your calendar, your pace / Students come to you) stack cleanly with consistent spacing; no overlap.\n\n3. **Wizard stepper** ✅ — Numbered circles 1–4 with connecting lines and labels (About you, What you teach, Your lesson, Review) are legible; step 1 is properly highlighted. Slightly tight but acceptable; not cramped.\n\n4. **Form fields** ✅ — First name, Last name, Email, Country (select), City, Native language (select), and photo upload (dashed box with \"YO\" initials avatar + \"Upload photo\" button) are all stacked correctly with visible labels, asterisks, and helper text. No overflow or clipping.\n\n5. **Continue button** ✅ — Dark-green pill \"Continue\" visible, right-aligned above \"everything saves as you type\" caption.\n\n6. **Visual defects** ⚠️ Minor:\n   - Nothing blocking. Only nitpick: stepper connector line runs close to the circle labels, and footer (long subjects/explore/support lists) makes the page very tall — expected for mobile, not a defect. No overflow, overlap, or misalignment detected.\n\n**Verdict: PASS.**",
+        "reasoning_content": "Answer QA checklist concisely.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1794690037,
+  "id": "202611150500301213f139c1294b17",
+  "model": "glm-5.3-flash",
+  "object": "chat.completion",
+  "request_id": "202611150500301213f139c1294b17",
+  "usage": {
+    "completion_tokens": 349,
+    "completion_tokens_details": {
+      "reasoning_tokens": 7
+    },
+    "prompt_tokens": 1606,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 1955
+  }
+}

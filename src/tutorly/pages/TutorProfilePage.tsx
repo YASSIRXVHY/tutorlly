@@ -8,7 +8,7 @@
  * openings, trust rows. Route: /tutor/:id.
  */
 import { useEffect, useMemo, useState } from "react";
-import { BadgeCheck, BadgePercent, CircleSlash, Globe2, Heart, MessageSquare, ShieldCheck, Zap } from "lucide-react";
+import { BadgeCheck, BadgePercent, CircleSlash, Globe2, Heart, MessageSquare, ShieldCheck, Star, Zap } from "lucide-react";
 import { tutorById, tutorExams, spokenLabel, isOnline, isLanguageTutor } from "../data/tutors";
 import { subjectById } from "../data/subjects";
 import { generateReviews, distributionOf, sortReviewsNewest, type Review } from "../data/reviews";
@@ -138,7 +138,11 @@ export function TutorProfilePage({ tutorId }: { tutorId: string }) {
                   </div>
                   <p className="tp-tagline">{tutor.tagline}</p>
                   <div className="tp-meta">
-                    <Stars rating={tutor.rating} count={tutor.reviewCount} />
+                    {tutor.reviewCount > 0 ? (
+                      <Stars rating={tutor.rating} count={tutor.reviewCount} />
+                    ) : (
+                      <span className="chip chip--green">New on Tutorly · first review pending</span>
+                    )}
                     <span className="tp-meta-dot" aria-hidden>·</span>
                     <span>responds in ~{tutor.responseHrs}h</span>
                     <span className="tp-meta-dot" aria-hidden>·</span>
@@ -150,7 +154,9 @@ export function TutorProfilePage({ tutorId }: { tutorId: string }) {
               </div>
               <div className="tp-stats">
                 <div className="tp-stat">
-                  <span className="tp-stat-num num">{tutor.rating.toFixed(1)}</span>
+                  <span className="tp-stat-num num">
+                    {tutor.reviewCount > 0 ? tutor.rating.toFixed(1) : "—"}
+                  </span>
                   <span className="mono-label">average</span>
                 </div>
                 <div className="tp-stat">
@@ -254,46 +260,62 @@ export function TutorProfilePage({ tutorId }: { tutorId: string }) {
                 </div>
               ) : (
                 <div className="tp-tabpanel" role="tabpanel" id="tp-panel" aria-labelledby="tp-tab-reviews" key="reviews">
-                  <div className="tp-reviews-head">
-                    <h3 className="tp-card-title">Reviews</h3>
-                    <span className="mono-label num">
-                      showing {shownCount} most recent of {tutor.reviewCount}
-                    </span>
-                  </div>
-                  <div className="tp-dist" aria-label="Rating distribution">
-                    {dist.map((count, i) => (
-                      <div className="tp-dist-row" key={5 - i}>
-                        <span className="tp-dist-key">{5 - i}★</span>
-                        <span className="meter tp-dist-meter">
-                          <span className="meter-fill" style={{ width: `${(count / distMax) * 100}%` }} />
-                        </span>
-                        <span className="tp-dist-count num">{count}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <ul className="tp-reviewlist" aria-label="Student reviews">
-                    {myReviews.map((r) => (
-                      <ReviewRow key={r.id} review={r} mine />
-                    ))}
-                    {shownCorpus.map((r) => (
-                      <ReviewRow key={r.id} review={r} />
-                    ))}
-                  </ul>
-                  {remaining > 0 ? (
-                    <div className="tp-review-more">
-                      <button
-                        type="button"
-                        className="btn btn--outline btn--sm"
-                        onClick={() => setVisibleCount((v) => v + PAGE_SIZE)}
+                  {corpus.length === 0 && myReviews.length === 0 ? (
+                    <div className="tp-reviews-empty">
+                      <EmptyState
+                        icon={Star}
+                        title="No reviews yet — you're looking at a brand-new tutor"
                       >
-                        Show more reviews
-                      </button>
+                        {tutor.firstName} was approved recently and hasn't taught a reviewed lesson
+                        yet. Book the half-price trial and the first words here could be yours.
+                      </EmptyState>
                     </div>
                   ) : (
-                    <p className="mono-label tp-archive">
-                      That's every recent review we show — {tutor.reviewCount - shownCount} older
-                      ones live in the archive.
-                    </p>
+                    <>
+                      <div className="tp-reviews-head">
+                        <h3 className="tp-card-title">Reviews</h3>
+                        <span className="mono-label num">
+                          showing {shownCount} most recent of {tutor.reviewCount}
+                        </span>
+                      </div>
+                      {corpus.length > 0 ? (
+                        <div className="tp-dist" aria-label="Rating distribution">
+                          {dist.map((count, i) => (
+                            <div className="tp-dist-row" key={5 - i}>
+                              <span className="tp-dist-key">{5 - i}★</span>
+                              <span className="meter tp-dist-meter">
+                                <span className="meter-fill" style={{ width: `${(count / distMax) * 100}%` }} />
+                              </span>
+                              <span className="tp-dist-count num">{count}</span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                      <ul className="tp-reviewlist" aria-label="Student reviews">
+                        {myReviews.map((r) => (
+                          <ReviewRow key={r.id} review={r} mine />
+                        ))}
+                        {shownCorpus.map((r) => (
+                          <ReviewRow key={r.id} review={r} />
+                        ))}
+                      </ul>
+                      {remaining > 0 ? (
+                        <div className="tp-review-more">
+                          <button
+                            type="button"
+                            className="btn btn--outline btn--sm"
+                            onClick={() => setVisibleCount((v) => v + PAGE_SIZE)}
+                          >
+                            Show more reviews
+                          </button>
+                        </div>
+                      ) : (
+                        <p className="mono-label tp-archive">
+                          That's every recent review we show — {tutor.reviewCount - shownCount} older
+                          ones live in the archive.
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
               )}

@@ -1,0 +1,357 @@
+/*
+  Tutorly — messages page.
+  Warm cream behind two white cards: the conversation list and the thread.
+  Student bubbles in deep green, tutor bubbles in white with a hairline.
+  Mobile shows one pane at a time — the thread carries a back button.
+*/
+
+/* ============ page & two-pane layout ============ */
+
+.msg-page { padding: 26px 0 46px; }
+
+/* Desktop ≥900px: list (348px) + thread (1fr), cream showing between. */
+@media (min-width: 900px) {
+  .msg-layout {
+    display: grid;
+    grid-template-columns: 348px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+}
+
+/* Mobile: one pane at a time, full width, never side-by-side. */
+@media (max-width: 899px) {
+  .msg-layout--list .msg-thread { display: none; }
+  .msg-layout--thread .msg-list { display: none; }
+  .msg-rows { max-height: none; }
+  .msg-thread { min-height: calc(100dvh - var(--nav-h) - 96px); }
+  .msg-scroll { max-height: none; }
+  .msg-input { font-size: 16px; } /* 16px keeps iOS from zooming in */
+}
+
+/* ============ conversation list ============ */
+
+.msg-list { display: flex; flex-direction: column; }
+
+.msg-list-head {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.msg-title { font-size: 20px; }
+
+.msg-rows {
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 58vh;
+}
+
+.msg-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--t-fast) var(--ease);
+}
+.msg-row:hover { background: var(--bg-2); }
+
+/* The open thread: green wash plus a brand bar down the left edge. */
+.msg-row--active,
+.msg-row--active:hover {
+  background: var(--brand-tint);
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+
+.msg-row-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.msg-row-name {
+  font-size: 15px; font-weight: 700; line-height: 1.15;
+  color: var(--ink);
+}
+
+/* One-line preview, clipped with an ellipsis. */
+.msg-row-preview {
+  display: block;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.msg-row--unread .msg-row-preview { color: var(--ink); font-weight: 600; }
+
+.msg-row-side {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
+}
+.msg-row-time { font-size: 10px; }
+
+/* The unread marker: a quiet green dot, spoken aloud when asked. */
+.msg-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* ============ thread pane ============ */
+
+.msg-thread {
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+}
+
+/* The resting pane when nobody is selected. */
+.msg-thread--none {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 340px;
+}
+
+.msg-thread-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--line);
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  background: var(--surface);
+}
+
+.msg-thread-name {
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Subject chips, home city, reply speed, and the profile link. */
+.msg-thread-facts {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+.msg-thread-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip.msg-chip { height: 22px; padding: 0 10px; font-size: 11px; }
+.msg-profile { margin-left: auto; }
+
+/* Back button — mobile only, returns to the conversation list. */
+.msg-back { display: none; }
+@media (max-width: 899px) {
+  .msg-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    height: 34px;
+    padding: 0 10px 0 6px;
+    margin-left: -6px;
+    border: 0;
+    border-radius: var(--r-md);
+    background: transparent;
+    color: var(--brand);
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .msg-back:hover { background: var(--brand-tint); }
+}
+
+/* ============ the letters themselves ============ */
+
+.msg-scroll {
+  flex: 1 1 auto;
+  min-height: 340px;
+  max-height: 58vh;
+  padding: 16px 16px 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Day dividers: a centered mono chip when the date changes. */
+.msg-day { display: flex; justify-content: center; margin: 10px 0 4px; }
+.msg-day:first-child { margin-top: 2px; }
+.msg-day-label {
+  font-family: var(--font-mono); font-size: 10.5px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase; line-height: 1;
+  color: var(--ink-3);
+  background: var(--bg-2);
+  border-radius: var(--r-pill);
+  padding: 5px 12px;
+}
+
+.msg-bubble {
+  max-width: 72%;
+  margin-bottom: 12px;
+  padding: 9px 14px 7px;
+  border-radius: 16px;
+  animation: fade-up var(--t-fast) var(--ease);
+}
+
+/* Mine: deep green, right, sharp corner nearest the sender. */
+.msg-bubble--me {
+  align-self: flex-end;
+  background: var(--brand);
+  border-bottom-right-radius: 4px;
+}
+
+/* Theirs: white with a hairline, left. */
+.msg-bubble--tutor {
+  align-self: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-bottom-left-radius: 4px;
+}
+
+.msg-bubble-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+.msg-bubble--me .msg-bubble-text { color: #fff; }
+.msg-bubble--tutor .msg-bubble-text { color: var(--ink); }
+
+.msg-bubble-time {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1;
+  opacity: 0.55;
+}
+.msg-bubble--me .msg-bubble-time { text-align: right; }
+
+/* The typing indicator: three dots, out of step on purpose. */
+.msg-bubble--typing { padding: 12px 16px 10px; }
+.msg-typing { display: inline-flex; align-items: center; gap: 5px; }
+.msg-typing i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink-3);
+  animation: msg-typing 1.15s ease-in-out infinite;
+}
+.msg-typing i:nth-child(2) { animation-delay: 0.18s; }
+.msg-typing i:nth-child(3) { animation-delay: 0.36s; }
+@keyframes msg-typing {
+  0%, 60%, 100% { opacity: 0.25; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-2.5px); }
+}
+
+/* ============ an empty thread ============ */
+
+.msg-blank {
+  margin: auto;
+  max-width: 420px;
+  padding: 20px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+.msg-blank-title {
+  font-size: 15.5px; font-weight: 700; line-height: 1.35;
+  color: var(--ink);
+}
+
+/* ============ composer ============ */
+
+.msg-composer {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--line);
+  border-radius: 0 0 var(--r-lg) var(--r-lg);
+  background: var(--surface);
+}
+
+/* Quick prompts: suggestions that fill the box, never fire it. */
+.msg-prompts {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.msg-quick { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; }
+.chip.msg-quick-chip {
+  height: 26px;
+  padding: 0 11px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.chip.msg-quick-chip:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+  background: var(--brand-tint);
+}
+
+.msg-input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+/* One row of composer, growing to three before it scrolls inside. */
+.msg-input {
+  flex: 1 1 auto;
+  min-height: 44px;
+  max-height: 88px;
+  resize: none;
+  overflow-y: hidden;
+  border: 1.5px solid var(--line-2);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 11px 14px;
+  transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+.msg-input::placeholder { color: var(--ink-3); }
+.msg-input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-tint);
+}
+
+.btn.btn--accent.msg-send {
+  flex: none;
+  width: 46px;
+  height: 44px;
+  padding: 0;
+}

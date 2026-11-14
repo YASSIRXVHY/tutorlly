@@ -28,7 +28,9 @@ import { MessagesPage } from "./pages/MessagesPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { ClassroomPage } from "./pages/ClassroomPage";
 import { AdminPage } from "./pages/AdminPage";
+import { TeachPage } from "./pages/TeachPage";
 import { CATEGORIES } from "./data/subjects";
+import { resetCommunity } from "./data/community";
 
 export function AppRoot() {
   return (
@@ -80,6 +82,7 @@ function Shell() {
 
   if (route.path === "/") page = <HomePage />;
   else if (route.path === "/browse") page = <BrowsePage />;
+  else if (route.path === "/teach") page = <TeachPage />;
   else if (tutorMatch) page = <TutorProfilePage tutorId={tutorMatch.id} />;
   else if (route.path === "/messages") page = <MessagesPage />;
   else if (route.path === "/dashboard") page = <DashboardPage />;
@@ -178,10 +181,11 @@ function Footer() {
     } catch {
       /* storage unavailable */
     }
+    resetCommunity();
     dispatch({
       type: "toast",
       kind: "info",
-      text: "Demo data reset — the account, lessons, messages and reviews return to first-run state.",
+      text: "Demo data reset — the account, lessons, messages, reviews and teaching applications return to first-run state.",
     });
     setTimeout(() => window.location.reload(), 650);
   };
@@ -220,6 +224,7 @@ function Footer() {
             <div className="foot-label">Explore</div>
             <div className="foot-col">
               <Link className="foot-link" to="/browse">Find tutors</Link>
+              <Link className="foot-link" to="/teach">Become a tutor</Link>
               <Link className="foot-link" to="/messages">Messages</Link>
               <Link className="foot-link" to="/dashboard">My lessons</Link>
               <Link className="foot-link" to="/classroom/demo">Practice classroom</Link>

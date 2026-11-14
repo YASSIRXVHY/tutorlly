@@ -1,0 +1,29 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "## Bottom-left corner / bottom area\n\nThere **is** a floating element. In the bottom-left corner there's a **dark (black/dark green) circular avatar bubble with the letter \"N\"** in white. It sits directly on top of a **bright green pill-shaped button reading \"View your live profile →\"** that stretches across the bottom of the screen.\n\nKey details:\n- The dark \"N\" bubble **overlaps the left edge of the green button**, partially covering the \"V\" in \"View\" — the text is partially obscured/cut through by the bubble.\n- The \"N\" bubble appears to be a floating avatar/user badge (possibly a profile or chat launcher) that has collided with the CTA button.\n- The green button itself is cut off at the bottom edge of the viewport (partially below the fold), which is normal for a sticky bottom CTA, but the overlap with the avatar is not.\n\n## Overlapping/broken UI anywhere on the page\n\n1. **Floating \"N\" avatar bubble overlapping the \"View your live profile\" button** (bottom-left) — the main issue.\n2. **Bottom CTA button clipped by viewport edge** — the green button's lower half is cut off at the screen bottom, suggesting either a screenshot cropped mid-scroll or the button lacking safe bottom padding.\n3. No other overlaps detected: header (logo, search icon, hamburger), the \"You're live on the marketplace\" card, and the tutor card (Nadia Haddad, badges \"New on Tutorly\", \"Arabic\", \"Statistics\", price \"$18\", \"TRIAL −50%\" chip, \"View profile\" button, heart icon) all render cleanly without collisions.",
+        "reasoning_content": "Bottom-left: a floating dark circular avatar/bubble with \"N\" overlapping the green \"View your live profile →\" button, partially covering the \"V\"/left edge of that button.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1794689983,
+  "id": "202611150459361d6fccf782a0475d",
+  "model": "glm-5.3-flash",
+  "object": "chat.completion",
+  "request_id": "202611150459361d6fccf782a0475d",
+  "usage": {
+    "completion_tokens": 392,
+    "completion_tokens_details": {
+      "reasoning_tokens": 38
+    },
+    "prompt_tokens": 445,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 837
+  }
+}

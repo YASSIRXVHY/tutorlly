@@ -57,6 +57,17 @@
   min-width: 0;
 }
 .tcard-meta-dot { opacity: 0.5; }
+.tcard-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  color: var(--brand);
+  background: var(--brand-tint);
+  border-radius: var(--r-pill);
+  padding: 2px 9px;
+  font-size: 11.5px;
+}
 .tcard-online {
   display: inline-flex;
   align-items: center;

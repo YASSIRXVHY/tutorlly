@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "QA Checklist — 'Become a tutor' page (375px mobile)\n\n1) **Layout / overflow:** ✅ Mostly clean — no horizontal overflow, card content fits viewport width.\n   - ⚠️ Issue: avatar bubble (\"N\") at bottom-left **overlaps the \"View your live profile\" CTA button**, partially covering the text (\"View\" is obscured).\n\n2) **Hero headline:** ✅ \"You're live on the marketplace\" is readable, well-sized, and contrasts well.\n\n3) **Value-prop cards:** ✅ Content stacks properly (headline → description → tutor profile card → price → CTA). No overlap or broken stacking.\n\n4) **Wizard stepper:** ❌ **Not visible anywhere on this screen.** No multi-step stepper, progress dots, or step labels present.\n\n5) **Visual defects:**\n   - ⚠️ Overlapping chat/avatar bubble over bottom CTA (see #1).\n   - ⚠️ Bio text truncated mid-word (\"taught with patience…\") — acceptable if intentional truncation, but \"…\" is missing/truncated abruptly.\n   - Minor: price card shows \"$18\" with \"TRIAL -50%\" badge — renders fine.\n   - Search and menu icons in header render correctly.\n\n**Summary:** Pass on layout, headline, and stacking; fail on missing wizard stepper and one overlap defect with the floating avatar/CTA.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1794689949,
+  "id": "202611150459033b044c8af0554122",
+  "model": "glm-5.3-flash",
+  "object": "chat.completion",
+  "request_id": "202611150459033b044c8af0554122",
+  "usage": {
+    "completion_tokens": 290,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 477,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 767
+  }
+}

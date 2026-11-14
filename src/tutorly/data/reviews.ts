@@ -142,6 +142,13 @@ export function generateReviews(tutor: Tutor): Review[] {
   const hit = cache.get(tutor.id);
   if (hit) return hit;
 
+  // Community tutors approved through the teaching-application flow start
+  // with an honest zero: no fabricated corpus, just an empty reviews tab.
+  if (tutor.reviewCount === 0) {
+    cache.set(tutor.id, []);
+    return [];
+  }
+
   const primary = primarySubject(tutor);
   const topic = primary?.label ?? "the subject";
   const exams = tutorExams(tutor);

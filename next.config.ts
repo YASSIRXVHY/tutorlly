@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
+  /* The floating dev badge overlaps CTAs on mobile — the demo stays clean. */
+  devIndicators: false,
 };
 
 export default nextConfig;

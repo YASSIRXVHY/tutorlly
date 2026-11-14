@@ -15,6 +15,7 @@ import {
   Presentation,
   CornerDownLeft,
   ArrowRight,
+  GraduationCap,
   ShieldCheck,
 } from "lucide-react";
 import { useApp } from "../../store/AppStore";
@@ -162,7 +163,8 @@ function buildEntries(qRaw: string): Entry[] {
   const q = qRaw.trim().toLowerCase();
   const pages: Entry[] = [
     { id: "p-home", group: "Pages", label: "Home", icon: Home, hint: "The marketplace front page", go: () => navigate("/") },
-    { id: "p-browse", group: "Pages", label: "Find tutors", icon: Compass, hint: "Filter 12 tutors across 28 subjects", go: () => navigate("/browse") },
+    { id: "p-browse", group: "Pages", label: "Find tutors", icon: Compass, hint: "Filter the tutors across every subject", go: () => navigate("/browse") },
+  { id: "p-teach", group: "Pages", label: "Become a tutor", icon: GraduationCap, hint: "Apply to teach — four steps, one human review", go: () => navigate("/teach") },
     { id: "p-messages", group: "Pages", label: "Messages", icon: MessageCircle, hint: "Conversations with your tutors", go: () => navigate("/messages") },
     { id: "p-dash", group: "Pages", label: "My lessons", icon: CalendarCheck, hint: "Countdowns, history and reviews", go: () => navigate("/dashboard") },
     { id: "p-demo", group: "Pages", label: "Practice classroom", icon: Presentation, hint: "The live room with whiteboard — no booking needed", go: () => navigate("/classroom/demo") },

@@ -1,0 +1,717 @@
+     1→     1→/**
+     2→     2→ * The catalogue — twelve hand-authored tutors across six subject categories.
+     3→     3→ * Ten languages, math, sciences, code, music and test prep. Prices, ratings
+     4→     4→ * and biographies are fixed data; anything probabilistic (review corpora,
+     5→     5→ * slot availability) is derived from these ids via seeded RNG.
+     6→     6→ */
+     7→     7→import type { Specialty } from "./subjects";
+     8→     8→import { subjectById, LANG_EXAMS } from "./subjects";
+     9→     9→import { rng } from "../utils/rng";
+    10→    10→
+    11→    11→export type Level = "Native" | "C2" | "C1" | "B2" | "B1" | "A2" | "A1";
+    12→    12→
+    13→    13→export interface Teach {
+    14→    14→  subject: string; // subject id
+    15→    15→  level: string; // human display level: "Native speaker", "C1", "All levels"…
+    16→    16→}
+    17→    17→
+    18→    18→export interface Spoken {
+    19→    19→  code: string; // language code
+    20→    20→  level: Level;
+    21→    21→}
+    22→    22→
+    23→    23→export interface CaptionLine {
+    24→    24→  /** The line spoken in the tutor's teaching language (English for non-language tutors). */
+    25→    25→  line: string;
+    26→    26→  /** English subtitle (identical for non-language tutors — the player hides it then). */
+    27→    27→  en: string;
+    28→    28→}
+    29→    29→
+    30→    30→export interface Tutor {
+    31→    31→  id: string;
+    32→    32→  name: string;
+    33→    33→  firstName: string;
+    34→    34→  city: string;
+    35→    35→  country: string;
+    36→    36→  cc: string;
+    37→    37→  portrait: string;
+    38→    38→  /** The teaching list — ordered, primary first. */
+    39→    39→  teaches: Teach[];
+    40→    40→  /** Languages the tutor speaks, native first. */
+    41→    41→  spoken: Spoken[];
+    42→    42→  tagline: string;
+    43→    43→  bio: [string, string];
+    44→    44→  video: CaptionLine[];
+    45→    45→  price: number; // USD per 50-minute lesson
+    46→    46→  rating: number;
+    47→    47→  reviewCount: number;
+    48→    48→  lessonsTaught: number;
+    49→    49→  students: number;
+    50→    50→  since: number;
+    51→    51→  responseHrs: number;
+    52→    52→  specialties: Specialty[];
+    53→    53→  /** 0..1 — density of open slots in the availability grid. */
+    54→    54→  openness: number;
+    55→    55→  trial: boolean;
+    56→    56→  /** Credential stamps shown next to the name. */
+    57→    57→  badges: string[];
+    58→    58→}
+    59→    59→
+    60→    60→export const TUTORS: Tutor[] = [
+    61→    61→  {
+    62→    62→    id: "mariana",
+    63→    63→    name: "Mariana Costa",
+    64→    64→    firstName: "Mariana",
+    65→    65→    city: "Buenos Aires",
+    66→    66→    country: "Argentina",
+    67→    67→    cc: "AR",
+    68→    68→    portrait: "/tutors/mariana.png",
+    69→    69→    teaches: [{ subject: "spanish", level: "Native speaker" }],
+    70→    70→    spoken: [
+    71→    71→      { code: "es", level: "Native" },
+    72→    72→      { code: "en", level: "C1" },
+    73→    73→      { code: "it", level: "B2" },
+    74→    74→    ],
+    75→    75→    tagline: "Porteño Spanish without the accent anxiety.",
+    76→    76→    bio: [
+    77→    77→      "I spent eight years as a radio journalist in Buenos Aires before teaching, which means two things: I have opinions about pronunciation, and I never let a student finish a sentence with “ehh”. We build Porteño Spanish — voseo and all — from the news, the music and the milonga, not from tourist phrasebooks.",
+    78→    78→      "My students range from diplomats who need to stop sounding like textbooks to partners of Argentines who want to survive a Sunday asado. Beginners welcome; perfectionism optional.",
+    79→    79→    ],
+    80→    80→    video: [
+    81→    81→      {
+    82→    82→        line: "¡Hola! Soy Mariana, y te enseño el castellano que se habla en Buenos Aires.",
+    83→    83→        en: "Hi! I'm Mariana, and I teach the Spanish actually spoken in Buenos Aires.",
+    84→    84→      },
+    85→    85→      {
+    86→    86→        line: "En mi clase no hay exámenes sorpresa: hay conversación, música y mate.",
+    87→    87→        en: "In my class there are no surprise quizzes: there's conversation, music, and mate.",
+    88→    88→      },
+    89→    89→      {
+    90→    90→        line: "Si podés decir la “ll” como “sh”, ya estás a mitad de camino.",
+    91→    91→        en: "If you can say “ll” like “sh”, you're already halfway to Porteño.",
+    92→    92→      },
+    93→    93→      {
+    94→    94→        line: "Empecemos: la primera clase va a mitad de precio, sin compromiso.",
+    95→    95→        en: "Let's begin: the first lesson is half price, no strings attached.",
+    96→    96→      },
+    97→    97→    ],
+    98→    98→    price: 18,
+    99→    99→    rating: 4.9,
+   100→   100→    reviewCount: 214,
+   101→   101→    lessonsTaught: 2341,
+   102→   102→    students: 214,
+   103→   103→    since: 2016,
+   104→   104→    responseHrs: 2,
+   105→   105→    specialties: ["Conversation", "Business", "Travel"],
+   106→   106→    openness: 0.8,
+   107→   107→    trial: true,
+   108→   108→    badges: ["Ex-radio journalist"],
+   109→   109→  },
+   110→   110→  {
+   111→   111→    id: "camille",
+   112→   112→    name: "Camille Laurent",
+   113→   113→    firstName: "Camille",
+   114→   114→    city: "Lyon",
+   115→   115→    country: "France",
+   116→   116→    cc: "FR",
+   117→   117→    portrait: "/tutors/camille.png",
+   118→   118→    teaches: [{ subject: "french", level: "Native speaker" }],
+   119→   119→    spoken: [
+   120→   120→      { code: "fr", level: "Native" },
+   121→   121→      { code: "en", level: "C2" },
+   122→   122→      { code: "es", level: "B1" },
+   123→   123→    ],
+   124→   124→    tagline: "French with the smell of a good bookshop.",
+   125→   125→    bio: [
+   126→   126→      "I'm a bookseller turned teacher from Lyon, which explains a lot: my lessons smell of the second-hand shelf rather than the textbook aisle. We read, we argue, we laugh — and somewhere in between you start speaking French with real Lyon vowels.",
+   127→   127→      "Pronunciation is my obsession. The French “r” is not a monster, whatever school told you; it's a muscle, and muscles get trained.",
+   128→   128→    ],
+   129→   129→    video: [
+   130→   130→      { line: "Bonjour ! Moi, c'est Camille, de Lyon.", en: "Hello! I'm Camille, from Lyon." },
+   131→   131→      {
+   132→   132→        line: "On travaillera la prononciation — le « r » n'est pas un monstre, promis.",
+   133→   133→        en: "We'll work pronunciation — the French “r” is not a monster, promise.",
+   134→   134→      },
+   135→   135→      {
+   136→   136→        line: "Mes cours sentent la librairie, pas le manuel scolaire.",
+   137→   137→        en: "My lessons smell of the bookshop, not the schoolbook.",
+   138→   138→      },
+   139→   139→      { line: "À très vite dans la salle de classe.", en: "See you very soon in the classroom." },
+   140→   140→    ],
+   141→   141→    price: 22,
+   142→   142→    rating: 4.9,
+   143→   143→    reviewCount: 301,
+   144→   144→    lessonsTaught: 2890,
+   145→   145→    students: 301,
+   146→   146→    since: 2015,
+   147→   147→    responseHrs: 1,
+   148→   148→    specialties: ["Conversation", "Pronunciation", "Travel"],
+   149→   149→    openness: 0.5,
+   150→   150→    trial: true,
+   151→   151→    badges: ["Ex-bookseller"],
+   152→   152→  },
+   153→   153→  {
+   154→   154→    id: "klaus",
+   155→   155→    name: "Klaus Weber",
+   156→   156→    firstName: "Klaus",
+   157→   157→    city: "Vienna",
+   158→   158→    country: "Austria",
+   159→   159→    cc: "AT",
+   160→   160→    portrait: "/tutors/klaus.png",
+   161→   161→    teaches: [
+   162→   162→      { subject: "german", level: "Native speaker" },
+   163→   163→      { subject: "music-theory", level: "All levels" },
+   164→   164→      { subject: "piano", level: "Beginner & intermediate" },
+   165→   165→    ],
+   166→   166→    spoken: [
+   167→   167→      { code: "de", level: "Native" },
+   168→   168→      { code: "en", level: "C2" },
+   169→   169→      { code: "it", level: "B1" },
+   170→   170→    ],
+   171→   171→    tagline: "Ordnung in your grammar, a little Schubert after.",
+   172→   172→    bio: [
+   173→   173→      "Twenty years in Vienna's banking district taught me Business German the way it's actually wielded — register, jargon, and the delicate art of the polite German “no”. Since 2013 I've coached professionals through presentations, negotiations and the ÖSD certificates.",
+   174→   174→      "Vienna being Vienna, there is also a piano in my flat and a subscription at the Musikverein. I teach music theory the same way I teach cases: patiently, at the keyboard, until it stops being a subject and starts being a language you hear. My classroom has rules (Austrian, after all) but no fear.",
+   175→   175→    ],
+   176→   176→    video: [
+   177→   177→      { line: "Guten Tag, hier ist Klaus aus Wien.", en: "Good day, this is Klaus from Vienna." },
+   178→   178→      {
+   179→   179→        line: "Ordnung in der Grammatik, ein wenig Schubert danach.",
+   180→   180→        en: "Order in the grammar — a little Schubert afterwards.",
+   181→   181→      },
+   182→   182→      {
+   183→   183→        line: "Wir üben Fälle, Verben und wienerische Höflichkeit.",
+   184→   184→        en: "We practise cases, verbs, and Viennese politeness.",
+   185→   185→      },
+   186→   186→      { line: "Bis bald im Kursraum.", en: "See you soon in the classroom." },
+   187→   187→    ],
+   188→   188→    price: 26,
+   189→   189→    rating: 4.7,
+   190→   190→    reviewCount: 122,
+   191→   191→    lessonsTaught: 1654,
+   192→   192→    students: 122,
+   193→   193→    since: 2013,
+   194→   194→    responseHrs: 4,
+   195→   195→    specialties: ["Business", "Grammar", "Exam prep"],
+   196→   196→    openness: 0.45,
+   197→   197→    trial: false,
+   198→   198→    badges: ["ÖSD examiner", "20 yrs banking"],
+   199→   199→  },
+   200→   200→  {
+   201→   201→    id: "giulia",
+   202→   202→    name: "Giulia Romano",
+   203→   203→    firstName: "Giulia",
+   204→   204→    city: "Rome",
+   205→   205→    country: "Italy",
+   206→   206→    cc: "IT",
+   207→   207→    portrait: "/tutors/giulia.png",
+   208→   208→    teaches: [
+   209→   209→      { subject: "italian", level: "Native speaker" },
+   210→   210→      { subject: "guitar", level: "Beginner & intermediate" },
+   211→   211→    ],
+   212→   212→    spoken: [
+   213→   213→      { code: "it", level: "Native" },
+   214→   214→      { code: "en", level: "C2" },
+   215→   215→      { code: "es", level: "B2" },
+   216→   216→    ],
+   217→   217→    tagline: "Roman hospitality, Italian grammar, an acoustic guitar.",
+   218→   218→    bio: [
+   219→   219→      "Roman, proud of it, allergic to boring lessons. I teach the Italian people actually speak on a Tuesday: the espresso order, the argument about parking, the compliment to the nonna. Textbook Italian is on the menu, but I recommend the daily special.",
+   220→   220→      "And since every Roman evening ends with someone picking up a guitar: yes, I teach that too. Beginner and intermediate acoustic — chords, strumming, and the three songs that get you through any dinner party. Conversation first, grammar exactly when you need it.",
+   221→   221→    ],
+   222→   222→    video: [
+   223→   223→      { line: "Ciao! Sono Giulia, di Roma.", en: "Hi! I'm Giulia, from Rome." },
+   224→   224→      {
+   225→   225→        line: "Con me impari l'italiano che si parla davvero, tra un caffè e l'altro.",
+   226→   226→        en: "With me you learn the Italian really spoken, one coffee at a time.",
+   227→   227→      },
+   228→   228→      {
+   229→   229→        line: "E se vuoi, dopo la grammatica, prendiamo la chitarra.",
+   230→   230→        en: "And if you like, after the grammar, we pick up the guitar.",
+   231→   231→      },
+   232→   232→      {
+   233→   233→        line: "Ci vediamo in classe: porta le domande, io porto la pazienza.",
+   234→   234→        en: "See you in class: bring the questions, I'll bring the patience.",
+   235→   235→      },
+   236→   236→    ],
+   237→   237→    price: 19,
+   238→   238→    rating: 4.8,
+   239→   239→    reviewCount: 145,
+   240→   240→    lessonsTaught: 1108,
+   241→   241→    students: 145,
+   242→   242→    since: 2018,
+   243→   243→    responseHrs: 2,
+   244→   244→    specialties: ["Conversation", "Travel", "Beginners"],
+   245→   245→    openness: 0.7,
+   246→   246→    trial: true,
+   247→   247→    badges: ["Trastevere local"],
+   248→   248→  },
+   249→   249→  {
+   250→   250→    id: "kenji",
+   251→   251→    name: "Kenji Tanaka",
+   252→   252→    firstName: "Kenji",
+   253→   253→    city: "Osaka",
+   254→   254→    country: "Japan",
+   255→   255→    cc: "JP",
+   256→   256→    portrait: "/tutors/kenji.png",
+   257→   257→    teaches: [
+   258→   258→      { subject: "japanese", level: "Native speaker" },
+   259→   259→      { subject: "jlpt", level: "N5 → N1" },
+   260→   260→    ],
+   261→   261→    spoken: [
+   262→   262→      { code: "ja", level: "Native" },
+   263→   263→      { code: "en", level: "C1" },
+   264→   264→      { code: "ko", level: "A2" },
+   265→   265→    ],
+   266→   266→    tagline: "Structured Japanese, zero shortcuts, full patience.",
+   267→   267→    bio: [
+   268→   268→      "I have taught Japanese since 2011, from Osaka, politely and without shortcuts. My lessons have a spine: warm-up review, target grammar drilled, then free conversation while I take notes on what we fix next time. You always know what you're doing, and why.",
+   269→   269→      "JLPT students get past papers under real clock conditions. Business students get keigo that won't embarrass them in front of a client. Everyone gets patience, which Osaka keeps in stock.",
+   270→   270→    ],
+   271→   271→    video: [
+   272→   272→      {
+   273→   273→        line: "こんにちは、大阪のたなかけんじです。",
+   274→   274→        en: "Hello, I'm Kenji Tanaka from Osaka. (Konnichiwa, Osaka no Tanaka Kenji desu.)",
+   275→   275→      },
+   276→   276→      {
+   277→   277→        line: "ていねいに、すこしずつ。それが上達のコツです。",
+   278→   278→        en: "Politely, little by little — that is the trick to progress. (Teinei ni, sukoshizutsu.)",
+   279→   279→      },
+   280→   280→      {
+   281→   281→        line: "JLPTの過去問で、本番の緊張をなくしましょう。",
+   282→   282→        en: "Let's kill the exam-day nerves with real JLPT past papers.",
+   283→   283→      },
+   284→   284→      { line: "いっしょにがんばりましょう。", en: "Let's work hard together. (Issho ni ganbarimashou.)" },
+   285→   285→    ],
+   286→   286→    price: 30,
+   287→   287→    rating: 4.9,
+   288→   288→    reviewCount: 389,
+   289→   289→    lessonsTaught: 3210,
+   290→   290→    students: 389,
+   291→   291→    since: 2011,
+   292→   292→    responseHrs: 3,
+   293→   293→    specialties: ["Exam prep", "Grammar", "Business"],
+   294→   294→    openness: 0.4,
+   295→   295→    trial: false,
+   296→   296→    badges: ["JLPT drill master"],
+   297→   297→  },
+   298→   298→  {
+   299→   299→    id: "jiwoo",
+   300→   300→    name: "Ji-woo Park",
+   301→   301→    firstName: "Ji-woo",
+   302→   302→    city: "Seoul",
+   303→   303→    country: "South Korea",
+   304→   304→    cc: "KR",
+   305→   305→    portrait: "/tutors/jiwoo.png",
+   306→   306→    teaches: [{ subject: "korean", level: "Native speaker" }],
+   307→   307→    spoken: [
+   308→   308→      { code: "ko", level: "Native" },
+   309→   309→      { code: "en", level: "C1" },
+   310→   310→      { code: "ja", level: "B1" },
+   311→   311→    ],
+   312→   312→    tagline: "Korean the way the dramas actually speak it.",
+   313→   313→    bio: [
+   314→   314→      " dramas built my method. We study the expressions Seoul actually uses — the sighs, the comebacks, the plot twists — and drill pronunciation until your annyeonghaseyo stops sounding like a question. Grammar rides along quietly, the way it does in real life.",
+   315→   315→      "Beginners are my specialty: we start with hangul, which you'll be reading by lesson three, and confidence, which I supply by the drumload.",
+   316→   316→    ],
+   317→   317→    video: [
+   318→   318→      { line: "안녕하세요! 서울에서 만나요.", en: "Hello! We meet from Seoul. (Annyeonghaseyo! Seoul-eseo mannayo.)" },
+   319→   319→      { line: "드라마 표현 그대로 연습해요.", en: "We practise expressions exactly as the dramas use them." },
+   320→   320→      {
+   321→   321→        line: "발음은 거울 앞에서, 자신감은 제가 챙길게요.",
+   322→   322→        en: "Pronunciation in front of a mirror — the confidence I'll handle.",
+   323→   323→      },
+   324→   324→      { line: "또 만나요!", en: "See you again! (Tto mannayo!)" },
+   325→   325→    ],
+   326→   326→    price: 21,
+   327→   327→    rating: 4.8,
+   328→   328→    reviewCount: 102,
+   329→   329→    lessonsTaught: 876,
+   330→   330→    students: 102,
+   331→   331→    since: 2020,
+   332→   332→    responseHrs: 1,
+   333→   333→    specialties: ["Conversation", "Pronunciation", "Beginners"],
+   334→   334→    openness: 0.75,
+   335→   335→    trial: true,
+   336→   336→    badges: ["K-drama fluency"],
+   337→   337→  },
+   338→   338→  {
+   339→   339→    id: "wei",
+   340→   340→    name: "Wei Zhang",
+   341→   341→    firstName: "Wei",
+   342→   342→    city: "Chengdu",
+   343→   343→    country: "China",
+   344→   344→    cc: "CN",
+   345→   345→    portrait: "/tutors/wei.png",
+   346→   346→    teaches: [
+   347→   347→      { subject: "mandarin", level: "Native speaker" },
+   348→   348→      { subject: "sat", level: "Math section" },
+   349→   349→    ],
+   350→   350→    spoken: [
+   351→   351→      { code: "zh", level: "Native" },
+   352→   352→      { code: "en", level: "C1" },
+   353→   353→      { code: "zh-sichuan", level: "Native" },
+   354→   354→    ],
+   355→   355→    tagline: "Tones first, panic never — and SAT math on the side.",
+   356→   356→    bio: [
+   357→   357→      "I teach Mandarin the Chengdu way: calm, spicy in the right measure. Tones are the staircase to everything, so we climb them slowly and correctly from day one — my tone drills involve tea, tongue positions and terrible jokes, all three effective.",
+   358→   358→      "By training I'm a software engineer, which explains the other half of my card: SAT Math. I drill the question types that quietly leak points — careless circle-geometry, calculator dependence — with past papers and a stopwatch. HSK students get level-by-level structure; parents get progress reports in two languages.",
+   359→   359→    ],
+   360→   360→    video: [
+   361→   361→      { line: "你好，我是来自成都的魏。", en: "Hello, I'm Wei from Chengdu. (Nǐ hǎo, wǒ shì Wéi.)" },
+   362→   362→      { line: "声调先走，恐慌永远不来。", en: "Tones first, panic never. (Shēngdiào xiān zǒu.)" },
+   363→   363→      {
+   364→   364→        line: "SAT数学也教——工程师的老本行。",
+   365→   365→        en: "I also coach SAT Math — an engineer's home turf.",
+   366→   366→      },
+   367→   367→      { line: "教室见！", en: "See you in the classroom! (Jiàoshì jiàn!)" },
+   368→   368→    ],
+   369→   369→    price: 25,
+   370→   370→    rating: 4.7,
+   371→   371→    reviewCount: 178,
+   372→   372→    lessonsTaught: 1402,
+   373→   373→    students: 178,
+   374→   374→    since: 2014,
+   375→   375→    responseHrs: 6,
+   376→   376→    specialties: ["Exam prep", "Business", "Test strategy"],
+   377→   377→    openness: 0.5,
+   378→   378→    trial: true,
+   379→   379→    badges: ["Software engineer"],
+   380→   380→  },
+   381→   381→  {
+   382→   382→    id: "layla",
+   383→   383→    name: "Layla Hassan",
+   384→   384→    firstName: "Layla",
+   385→   385→    city: "Cairo",
+   386→   386→    country: "Egypt",
+   387→   387→    cc: "EG",
+   388→   388→    portrait: "/tutors/layla.png",
+   389→   389→    teaches: [{ subject: "arabic", level: "Native speaker" }],
+   390→   390→    spoken: [
+   391→   391→      { code: "ar", level: "Native" },
+   392→   392→      { code: "en", level: "C1" },
+   393→   393→      { code: "fr", level: "B1" },
+   394→   394→    ],
+   395→   395→    tagline: "From the alphabet to Al Jazeera, calmly.",
+   396→   396→    bio: [
+   397→   397→      "I teach Modern Standard Arabic from Cairo — the clear, pan-Arab kind that travels from Rabat to Baghdad. We start with the alphabet, drawn beautifully (calligraphy is handwriting with self-respect), then build toward reading real news and arguing about it politely.",
+   398→   398→      "Beginners, don't fear: Arabic has a fearsome reputation and an undeserved one. The root system is logical once you see it — three letters, a family of meanings. I'll show you.",
+   399→   399→    ],
+   400→   400→    video: [
+   401→   401→      { line: "مرحبًا، أنا ليلى من القاهرة.", en: "Hello, I'm Layla from Cairo. (Marḥaban, ana Layla min al-Qāhira.)" },
+   402→   402→      { line: "من الحروف إلى الجزيرة، خطوة بخطوة.", en: "From the letters to Al Jazeera, step by step." },
+   403→   403→      { line: "المكتبة العربية مفتوحة أمامك.", en: "The Arabic library stands open before you." },
+   404→   404→      { line: "أهلًا بك في الصف.", en: "Welcome to class. (Ahlan bika fī aṣ-ṣaff.)" },
+   405→   405→    ],
+   406→   406→    price: 20,
+   407→   407→    rating: 4.9,
+   408→   408→    reviewCount: 96,
+   409→   409→    lessonsTaught: 960,
+   410→   410→    students: 96,
+   411→   411→    since: 2017,
+   412→   412→    responseHrs: 2,
+   413→   413→    specialties: ["Beginners", "Grammar", "Conversation"],
+   414→   414→    openness: 0.6,
+   415→   415→    trial: true,
+   416→   416→    badges: ["Calligrapher"],
+   417→   417→  },
+   418→   418→  {
+   419→   419→    id: "beatriz",
+   420→   420→    name: "Beatriz Alves",
+   421→   421→    firstName: "Bia",
+   422→   422→    city: "São Paulo",
+   423→   423→    country: "Brazil",
+   424→   424→    cc: "BR",
+   425→   425→    portrait: "/tutors/beatriz.png",
+   426→   426→    teaches: [
+   427→   427→      { subject: "portuguese", level: "Native speaker" },
+   428→   428→      { subject: "biology", level: "School & AP" },
+   429→   429→      { subject: "chemistry", level: "School" },
+   430→   430→    ],
+   431→   431→    spoken: [
+   432→   432→      { code: "pt", level: "Native" },
+   433→   433→      { code: "en", level: "C1" },
+   434→   434→      { code: "es", level: "B2" },
+   435→   435→    ],
+   436→   436→    tagline: "Grammar with a bossa nova soundtrack — and a biology degree.",
+   437→   437→    bio: [
+   438→   438→      "São Paulo raised me, bossa nova raised my curriculum, and a biology degree from USP raised my second teaching card. My Portuguese lessons come with a soundtrack: MPB for the subjunctive, samba for numbers, Chico Buarque for the days you need poetry with your grammar.",
+   439→   439→      "With teens I switch lab coats: biology and chemistry, school through AP, taught with the same rule — mistakes are raw material. We mine them, fix them, and play them back in bossa rhythm. Fear of the accent and fear of the periodic table are the same disease.",
+   440→   440→    ],
+   441→   441→    video: [
+   442→   442→      { line: "Oi! Eu sou a Bia, de São Paulo.", en: "Hi! I'm Bia, from São Paulo." },
+   443→   443→      {
+   444→   444→        line: "Aqui a gramática tem trilha sonora: bossa, MPB e samba.",
+   445→   445→        en: "Here grammar has a soundtrack: bossa, MPB and samba.",
+   446→   446→      },
+   447→   447→      {
+   448→   448→        line: "E de cientista: biologia e química sem medo do laboratório.",
+   449→   449→        en: "And from my scientist side: biology and chemistry without lab fear.",
+   450→   450→      },
+   451→   451→      { line: "Te espero na aula, viu?", en: "I'll be waiting for you in class, okay?" },
+   452→   452→    ],
+   453→   453→    price: 17,
+   454→   454→    rating: 4.8,
+   455→   455→    reviewCount: 167,
+   456→   456→    lessonsTaught: 1310,
+   457→   457→    students: 167,
+   458→   458→    since: 2019,
+   459→   459→    responseHrs: 2,
+   460→   460→    specialties: ["Conversation", "Beginners", "Kids"],
+   461→   461→    openness: 0.85,
+   462→   462→    trial: true,
+   463→   463→    badges: ["BSc Biology"],
+   464→   464→  },
+   465→   465→  {
+   466→   466→    id: "natalia",
+   467→   467→    name: "Dr. Natalia Petrova",
+   468→   468→    firstName: "Natalia",
+   469→   469→    city: "St. Petersburg",
+   470→   470→    country: "Russia",
+   471→   471→    cc: "RU",
+   472→   472→    portrait: "/tutors/natalia.png",
+   473→   473→    teaches: [
+   474→   474→      { subject: "algebra", level: "Middle school → university" },
+   475→   475→      { subject: "calculus", level: "High school & university" },
+   476→   476→      { subject: "statistics", level: "University" },
+   477→   477→      { subject: "geometry", level: "All levels" },
+   478→   478→      { subject: "physics", level: "School & AP" },
+   479→   479→      { subject: "gre", level: "Quant section" },
+   480→   480→    ],
+   481→   481→    spoken: [
+   482→   482→      { code: "ru", level: "Native" },
+   483→   483→      { code: "en", level: "C1" },
+   484→   484→      { code: "de", level: "B2" },
+   485→   485→    ],
+   486→   486→    tagline: "Math anxiety has a cure. It's called a plan.",
+   487→   487→    bio: [
+   488→   488→      "For nine years I was an assistant lecturer in mathematics at a university in St. Petersburg, which taught me two things: how analysis actually works, and how many people were told they're “not a math person” by someone who had no business saying it. My PhD is in probability theory; my mission is the student who freezes at the sight of a fraction.",
+   489→   489→      "We work with a plan: diagnose the actual gap (it is almost always two topics earlier than you think), rebuild it properly, then move forward until the exam stops being a threat. GRE Quant students get my full drill library. Bring the homework you're dreading — I've seen worse, professionally.",
+   490→   490→    ],
+   491→   491→    video: [
+   492→   492→      {
+   493→   493→        line: "Hello — I'm Dr. Petrova, and I teach mathematics from St. Petersburg.",
+   494→   494→        en: "Hello — I'm Dr. Petrova, and I teach mathematics from St. Petersburg.",
+   495→   495→      },
+   496→   496→      {
+   497→   497→        line: "Math anxiety is not a talent problem. It's a missing-step problem.",
+   498→   498→        en: "Math anxiety is not a talent problem. It's a missing-step problem.",
+   499→   499→      },
+   500→   500→      {
+   501→   501→        line: "We find the missing step, we rebuild it, and the exam stops being scary.",
+   502→   502→        en: "We find the missing step, we rebuild it, and the exam stops being scary.",
+   503→   503→      },
+   504→   504→      {
+   505→   505→        line: "Bring the homework you're dreading. I've seen worse — professionally.",
+   506→   506→        en: "Bring the homework you're dreading. I've seen worse — professionally.",
+   507→   507→      },
+   508→   508→    ],
+   509→   509→    price: 34,
+   510→   510→    rating: 4.9,
+   511→   511→    reviewCount: 131,
+   512→   512→    lessonsTaught: 1140,
+   513→   513→    students: 131,
+   514→   514→    since: 2014,
+   515→   515→    responseHrs: 4,
+   516→   516→    specialties: ["Exam prep", "Homework help", "Test strategy"],
+   517→   517→    openness: 0.5,
+   518→   518→    trial: true,
+   519→   519→    badges: ["PhD Mathematics"],
+   520→   520→  },
+   521→   521→  {
+   522→   522→    id: "grace",
+   523→   523→    name: "Grace Osei",
+   524→   524→    firstName: "Grace",
+   525→   525→    city: "Accra",
+   526→   526→    country: "Ghana",
+   527→   527→    cc: "GH",
+   528→   528→    portrait: "/tutors/grace.png",
+   529→   529→    teaches: [
+   530→   530→      { subject: "english", level: "Native-level (C2)" },
+   531→   531→      { subject: "ielts", level: "Band 6 → 8.5" },
+   532→   532→      { subject: "toefl", level: "iBT 80 → 110" },
+   533→   533→    ],
+   534→   534→    spoken: [
+   535→   535→      { code: "tw", level: "Native" },
+   536→   536→      { code: "en", level: "C2" },
+   537→   537→      { code: "fr", level: "B1" },
+   538→   538→    ],
+   539→   539→    tagline: "IELTS is a rules game. I teach the rules.",
+   540→   540→    bio: [
+   541→   541→      "I graded IELTS speaking for three exam centres before teaching full-time, which means I know exactly where the points leak. English is technically my second language — Twi came first, English came fast — so I know the exam culture from both sides of the desk. We repair your articles, your coherence and your nerves, in that order.",
+   542→   542→      "My students are nurses, engineers, and one very determined footballer moving to Manchester. Interviews, standups, small talk on trains: if it happens in English, we rehearse it until it's boring. Boring, on exam day, is the goal.",
+   543→   543→    ],
+   544→   544→    video: [
+   545→   545→      { line: "Hello, I'm Grace, calling in from Accra.", en: "Hello, I'm Grace, calling in from Accra." },
+   546→   546→      {
+   547→   547→        line: "IELTS is a game with rules — I teach you the rules.",
+   548→   548→        en: "IELTS is a game with rules — I teach you the rules.",
+   549→   549→      },
+   550→   550→      {
+   551→   551→        line: "We fix the articles, then the nerves, then the score.",
+   552→   552→        en: "We fix the articles, then the nerves, then the score.",
+   553→   553→      },
+   554→   554→      { line: "See you in class.", en: "See you in class." },
+   555→   555→    ],
+   556→   556→    price: 16,
+   557→   557→    rating: 4.9,
+   558→   558→    reviewCount: 210,
+   559→   559→    lessonsTaught: 1502,
+   560→   560→    students: 210,
+   561→   561→    since: 2018,
+   562→   562→    responseHrs: 1,
+   563→   563→    specialties: ["Exam prep", "Business", "Interview prep"],
+   564→   564→    openness: 0.8,
+   565→   565→    trial: true,
+   566→   566→    badges: ["Ex-IELTS examiner"],
+   567→   567→  },
+   568→   568→  {
+   569→   569→    id: "alejandro",
+   570→   570→    name: "Alejandro Vega",
+   571→   571→    firstName: "Alejandro",
+   572→   572→    city: "Madrid",
+   573→   573→    country: "Spain",
+   574→   574→    cc: "ES",
+   575→   575→    portrait: "/tutors/alejandro.png",
+   576→   576→    teaches: [
+   577→   577→      { subject: "python", level: "Beginner → advanced" },
+   578→   578→      { subject: "javascript", level: "Beginner → advanced" },
+   579→   579→      { subject: "web-development", level: "First site → first job" },
+   580→   580→    ],
+   581→   581→    spoken: [
+   582→   582→      { code: "es", level: "Native" },
+   583→   583→      { code: "en", level: "C2" },
+   584→   584→    ],
+   585→   585→    tagline: "From your first print() to your first pull request.",
+   586→   586→    bio: [
+   587→   587→      "I've spent ten years building software in Madrid — fintech, then a logistics platform nobody loves but everybody uses — and the part I loved most was always onboarding the junior who had never written a line of code. Four years ago I made that the whole job.",
+   588→   588→      "My lessons are the opposite of a video course: you code, I watch, we debug together and I explain the why behind every stack trace. Career-changers are my specialty — accountants, nurses, one professional chess player. We ship something real in the trial lesson itself, a page of your own on the internet.",
+   589→   589→    ],
+   590→   590→    video: [
+   591→   591→      {
+   592→   592→        line: "Hola — I'm Alejandro, a software engineer from Madrid.",
+   593→   593→        en: "Hola — I'm Alejandro, a software engineer from Madrid.",
+   594→   594→      },
+   595→   595→      {
+   596→   596→        line: "In the trial we deploy a real web page with your name on it.",
+   597→   597→        en: "In the trial we deploy a real web page with your name on it.",
+   598→   598→      },
+   599→   599→      {
+   600→   600→        line: "You type, I watch, we debug together. You'll learn the why, not just the how.",
+   601→   601→        en: "You type, I watch, we debug together. You'll learn the why, not just the how.",
+   602→   602→      },
+   603→   603→      {
+   604→   604→        line: "Your first print() is closer than you think.",
+   605→   605→        en: "Your first print() is closer than you think.",
+   606→   606→      },
+   607→   607→    ],
+   608→   608→    price: 24,
+   609→   609→    rating: 4.8,
+   610→   610→    reviewCount: 87,
+   611→   611→    lessonsTaught: 604,
+   612→   612→    students: 94,
+   613→   613→    since: 2021,
+   614→   614→    responseHrs: 3,
+   615→   615→    specialties: ["Beginners", "Homework help", "Interview prep"],
+   616→   616→    openness: 0.65,
+   617→   617→    trial: true,
+   618→   618→    badges: ["10 yrs in fintech"],
+   619→   619→  },
+   620→   620→];
+   621→   621→
+   622→   622→export function tutorById(id: string | null | undefined): Tutor | undefined {
+   623→   623→  if (!id) return undefined;
+   624→   624→  return TUTORS.find((t) => t.id === id);
+   625→   625→}
+   626→   626→
+   627→   627→/** Resolved subjects a tutor teaches, in order. */
+   628→   628→export function tutorSubjects(t: Tutor) {
+   629→   629→  return t.teaches
+   630→   630→    .map((te) => subjectById(te.subject))
+   631→   631→    .filter((s): s is NonNullable<ReturnType<typeof subjectById>> => Boolean(s));
+   632→   632→}
+   633→   633→
+   634→   634→/** The subject the card and headline lead with. */
+   635→   635→export function primarySubject(t: Tutor) {
+   636→   636→  return tutorSubjects(t)[0];
+   637→   637→}
+   638→   638→
+   639→   639→/** Does this tutor teach any human language? */
+   640→   640→export function isLanguageTutor(t: Tutor): boolean {
+   641→   641→  return tutorSubjects(t).some((s) => s.cat === "languages");
+   642→   642→}
+   643→   643→
+   644→   644→/** The language a tutor teaches AND speaks natively, if any — drives the "native" filter. */
+   645→   645→export function nativeTaughtLanguage(t: Tutor) {
+   646→   646→  const taught = tutorSubjects(t).filter((s) => s.cat === "languages");
+   647→   647→  return taught.find((s) =>
+   648→   648→    t.spoken.some((sp) => subjectCodeMatches(sp.code, s.id) && sp.level === "Native")
+   649→   649→  );
+   650→   650→}
+   651→   651→
+   652→   652→export function subjectCodeMatches(code: string, subjectId: string): boolean {
+   653→   653→  // language codes vs subject ids: es↔spanish, zh↔mandarin, etc.
+   654→   654→  const map: Record<string, string> = {
+   655→   655→    en: "english",
+   656→   656→    es: "spanish",
+   657→   657→    fr: "french",
+   658→   658→    de: "german",
+   659→   659→    it: "italian",
+   660→   660→    pt: "portuguese",
+   661→   661→    ja: "japanese",
+   662→   662→    ko: "korean",
+   663→   663→    zh: "mandarin",
+   664→   664→    ar: "arabic",
+   665→   665→    ru: "russian",
+   666→   666→  };
+   667→   667→  return map[code] === subjectId;
+   668→   668→}
+   669→   669→
+   670→   670→/** Exam names this tutor coaches toward. */
+   671→   671→export function tutorExams(t: Tutor): string[] {
+   672→   672→  const out: string[] = [];
+   673→   673→  for (const te of t.teaches) {
+   674→   674→    if (subjectById(te.subject)?.cat === "test-prep") {
+   675→   675→      out.push(subjectById(te.subject)!.label);
+   676→   676→    } else if (subjectById(te.subject)?.cat === "languages") {
+   677→   677→      out.push(...(LANG_EXAMS[te.subject] ?? []));
+   678→   678→    }
+   679→   679→  }
+   680→   680→  return out;
+   681→   681→}
+   682→   682→
+   683→   683→/** Display names for languages that are spoken but not taught (Twi, Sichuanese…). */
+   684→   684→const CODE_TO_NAME: Record<string, string> = {
+   685→   685→  en: "English",
+   686→   686→  es: "Spanish",
+   687→   687→  fr: "French",
+   688→   688→  de: "German",
+   689→   689→  it: "Italian",
+   690→   690→  pt: "Portuguese",
+   691→   691→  ja: "Japanese",
+   692→   692→  ko: "Korean",
+   693→   693→  zh: "Mandarin",
+   694→   694→  ar: "Arabic",
+   695→   695→  ru: "Russian",
+   696→   696→  tw: "Twi",
+   697→   697→  "zh-sichuan": "Sichuanese",
+   698→   698→};
+   699→   699→
+   700→   700→export function spokenLabel(code: string): string {
+   701→   701→  return CODE_TO_NAME[code] ?? code.toUpperCase();
+   702→   702→}
+   703→   703→
+   704→   704→export function initialsOf(name: string): string {
+   705→   705→  return name
+   706→   706→    .split(/\s+/)
+   707→   707→    .slice(0, 2)
+   708→   708→    .map((p) => p[0])
+   709→   709→    .join("")
+   710→   710→    .toUpperCase();
+   711→   711→}
+   712→   712→
+   713→   713→/** Deterministic "online now" — stable within the current hour, per tutor. */
+   714→   714→export function isOnline(tutorId: string, now = new Date()): boolean {
+   715→   715→  return rng(tutorId, "online", now.getHours()).chance(0.58);
+   716→   716→}
+   717→   717→

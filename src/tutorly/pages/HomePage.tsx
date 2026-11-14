@@ -6,9 +6,9 @@
  * real availability engine, the top-rated four, how it works, and the CTA.
  * No footer or header here — the app shell provides those.
  */
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import {
-  ArrowRight, BadgePercent, CalendarCheck, Search, ShieldCheck, Video, Zap,
+  ArrowRight, BadgePercent, CalendarCheck, GraduationCap, Search, ShieldCheck, Video, Wallet, Zap,
 } from "lucide-react";
 import { CATEGORIES, SUBJECTS, subjectsForCategory } from "../data/subjects";
 import { TUTORS, isOnline, primarySubject, tutorSubjects } from "../data/tutors";
@@ -37,33 +37,30 @@ const POPULAR_SUBJECTS = [
   { id: "ielts", label: "IELTS" },
 ];
 
-const HOW_STEPS = [
+const HOW_ICONS = [Search, CalendarCheck, Video] as const;
+
+/** {count} fills with the live catalogue size at render time. */
+const HOW_COPY = [
   {
-    num: "01", icon: Search, title: "Find your match",
-    copy: `Filters that actually filter: subject, price, rating, native speakers, this week's calendar. ${TUTORS.length} tutors, zero endless scroll.`,
+    num: "01", title: "Find your match",
+    copy: `Filters that actually filter: subject, price, rating, native speakers, this week's calendar. {count} tutors, zero endless scroll.`,
   },
   {
-    num: "02", icon: CalendarCheck, title: "Book a trial at half price",
+    num: "02", title: "Book a trial at half price",
     copy: "Pick a real slot from the tutor's calendar. The checkout is fully simulated — any Luhn-valid card works, and 4242… is the classic.",
   },
   {
-    num: "03", icon: Video, title: "Meet in the live classroom",
+    num: "03", title: "Meet in the live classroom",
     copy: "Peer-to-peer video, a shared whiteboard both can draw on, and class chat. Bring headphones and your worst questions.",
   },
-];
+] as const;
 
 /** Rating desc, then review count desc — the deterministic "best of" order. */
-const TOP_RATED = [...TUTORS].sort(
-  (a, b) => b.rating - a.rating || b.reviewCount - a.reviewCount
-);
-const HERO_MINIS = TOP_RATED.slice(0, 3);
-const FEATURED = TOP_RATED.slice(0, 4);
-
-/** Per category: how many subjects exist and how many tutors teach them. */
-const CATEGORY_STATS = CATEGORIES.map((c) => ({
-  subjects: subjectsForCategory(c.id).length,
-  tutors: TUTORS.filter((t) => tutorSubjects(t).some((s) => s.cat === c.id)).length,
-}));
+function topRated(): Tutor[] {
+  return [...TUTORS].sort(
+    (a, b) => b.rating - a.rating || b.reviewCount - a.reviewCount
+  );
+}
 
 /* ---------------- live-today sessions ---------------- */
 
@@ -108,6 +105,21 @@ function Wavebars() {
 export function HomePage() {
   const [searchCat, setSearchCat] = useState("");
   const [searchQ, setSearchQ] = useState("");
+
+  // Computed per render, not at module scope: tutors approved through the
+  // teaching-application flow join the catalogue at runtime, and the front
+  // page's numbers stay honest without a reload.
+  const TOP_RATED = useMemo(() => topRated(), []);
+  const HERO_MINIS = TOP_RATED.slice(0, 3);
+  const FEATURED = TOP_RATED.slice(0, 4);
+  const CATEGORY_STATS = useMemo(
+    () =>
+      CATEGORIES.map((c) => ({
+        subjects: subjectsForCategory(c.id).length,
+        tutors: TUTORS.filter((t) => tutorSubjects(t).some((s) => s.cat === c.id)).length,
+      })),
+    []
+  );
 
   const sessions = liveSessions(new Date());
   const showingTomorrow = sessions.length > 0 && sessions[0].when === "tomorrow";
@@ -328,8 +340,8 @@ export function HomePage() {
         <div className="container">
           <SectionHead eyebrow="HOW TUTORLY WORKS" title="Three steps and you're learning" />
           <ol className="home-steps">
-            {HOW_STEPS.map((step) => {
-              const Icon = step.icon;
+            {HOW_COPY.map((step, i) => {
+              const Icon = HOW_ICONS[i];
               return (
                 <li className="home-step card home-anim" key={step.num}>
                   <span className="home-step-head">
@@ -337,7 +349,7 @@ export function HomePage() {
                     <span className="home-step-num num">{step.num}</span>
                   </span>
                   <h3>{step.title}</h3>
-                  <p>{step.copy}</p>
+                  <p>{step.copy.replace("{count}", String(TUTORS.length))}</p>
                 </li>
               );
             })}
@@ -345,7 +357,34 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* ---------------- 6 · CTA band ---------------- */}
+      {/* ---------------- 6 · teach band ---------------- */}
+      <section className="home-section" aria-label="Teach on Tutorly">
+        <div className="container">
+          <div className="home-teach">
+            <div className="home-teach-copy">
+              <span className="home-teach-eyebrow mono-label">for teachers</span>
+              <h2>Do you teach? Apply once, go live.</h2>
+              <p>
+                The same marketplace works from the other side of the desk: apply with a
+                four-step form, get reviewed by a human, and your profile joins{" "}
+                <span className="num">{TUTORS.length}</span> tutors in search — bookings,
+                messages and the live classroom included. You keep 82% of every lesson.
+              </p>
+              <div className="home-teach-actions">
+                <Link to="/teach" className="btn btn--accent btn--lg">
+                  <GraduationCap size={17} aria-hidden /> Become a tutor
+                </Link>
+                <span className="home-teach-props">
+                  <span><Wallet size={13} aria-hidden /> set your rate</span>
+                  <span><CalendarCheck size={13} aria-hidden /> your calendar</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- 7 · CTA band ---------------- */}
       <section className="home-section" aria-label="Start learning">
         <div className="container">
           <div className="home-cta">

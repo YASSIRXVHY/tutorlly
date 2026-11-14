@@ -85,6 +85,12 @@ export function Navbar() {
           </button>
 
           <div className="nav-actions">
+            <Link
+              to="/teach"
+              className={cx("nav-teach", route.path === "/teach" && "nav-teach--active")}
+            >
+              <GraduationCap size={14} aria-hidden /> Become a tutor
+            </Link>
             {state.session ? (
               <div className="nav-user" ref={menuRef}>
                 <button
@@ -114,6 +120,9 @@ export function Navbar() {
                     </button>
                     <button type="button" className="dropdown-item" role="menuitem" onClick={() => navigate("/dashboard")}>
                       <Heart size={15} aria-hidden /> Favourites
+                    </button>
+                    <button type="button" className="dropdown-item" role="menuitem" onClick={() => navigate("/teach")}>
+                      <GraduationCap size={15} aria-hidden /> Become a tutor
                     </button>
                     <div className="dropdown-sep" />
                     <button
@@ -187,6 +196,9 @@ export function Navbar() {
             </Link>
             <Link to="/dashboard" className={cx("nav-sheet-link", route.path === "/dashboard" && "nav-sheet-link--active")}>
               <CalendarCheck size={17} aria-hidden /> My lessons
+            </Link>
+            <Link to="/teach" className={cx("nav-sheet-link", route.path === "/teach" && "nav-sheet-link--active")}>
+              <GraduationCap size={17} aria-hidden /> Become a tutor
             </Link>
             {state.session ? (
               <button

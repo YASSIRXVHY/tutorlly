@@ -1,0 +1,25 @@
+/* Tutorly — auth modal extras (on top of modal + ui.css). */
+
+.auth-body { gap: 14px; }
+
+.auth-demo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  height: 40px;
+  border-radius: var(--r-pill);
+  border: 1.5px dashed var(--line-2);
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+.auth-demo:hover {
+  border-color: var(--accent-deep);
+  color: var(--brand);
+  border-style: solid;
+}

@@ -1,0 +1,341 @@
+/*
+  Tutorly — browse page styles.
+  The marketplace search page: head, filter rail, results toolbar
+  (search / removable chips / sort), results grid, skeleton cards.
+  Every class is br-prefixed; shared atoms live in ui.css.
+*/
+
+/* ============ page frame & head ============ */
+
+.br-page {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding-block: 30px 48px;
+}
+.br-head {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+/* Pairs with .mono-label — the descendant selector pins the accent green
+   regardless of stylesheet load order. */
+.br-head .br-kicker { color: var(--accent-deep); }
+.br-title { font-size: clamp(27px, 4vw, 36px); }
+/* Pairs with .mono-label — descendant selectors pin the size and tone
+   regardless of stylesheet load order. */
+.br-head .br-sub { font-size: 12px; color: var(--ink-2); }
+.br-head .br-sub-count {
+  color: var(--brand);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* ============ layout: rail + results ============ */
+
+.br-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: start;
+}
+/* Below the desktop breakpoint the rail lives in the Filters drawer. */
+.br-side { display: none; }
+/* The results column owns its own rhythm (toolbar → grid → empty). */
+.br-results {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .br-layout { grid-template-columns: 288px minmax(0, 1fr); }
+  .br-side {
+    display: block;
+    position: sticky;
+    top: 84px;
+    max-height: calc(100dvh - 108px);
+    overflow-y: auto;
+  }
+  /* .btn.br-filters-btn out-specifies .btn's display for load-order safety. */
+  .btn.br-filters-btn { display: none; }
+}
+
+/* ============ sidebar blocks ============ */
+
+.br-filters { display: flex; flex-direction: column; }
+.br-fgroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.br-fgroup + .br-fgroup {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.br-flabel { margin: 0; }
+
+/* — category radio list — */
+
+.br-catlist {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.br-catitem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease);
+}
+.br-catitem:hover { background: var(--bg-2); }
+.br-catitem--on,
+.br-catitem--on:hover {
+  background: var(--brand);
+  color: #fff;
+}
+.br-catitem-ico {
+  flex: none;
+  display: inline-flex;
+  color: var(--ink-3);
+}
+.br-catitem--on .br-catitem-ico { color: #fff; opacity: 0.9; }
+.br-catitem-label { flex: 1; min-width: 0; }
+.br-catitem-count {
+  flex: none;
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.br-catitem--on .br-catitem-count { color: rgba(255, 255, 255, 0.75); }
+
+/* — subject & specialty lists —
+   The rows bleed 8px via their own negative margins; clip the horizontal
+   overflow so the vertical scroll stays the only scrollbar. */
+
+.br-sublist {
+  max-height: 300px;
+  overflow: hidden auto;
+  padding-right: 2px;
+}
+.br-subgroup + .br-subgroup { margin-top: 8px; }
+.br-subgroup-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 5px 0 4px;
+  margin-bottom: 2px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.br-checkrow-label { min-width: 0; }
+.br-checkrow-note {
+  color: var(--ink-3);
+  font-weight: 400;
+}
+/* Zero-tutor subjects stay selectable — they just look quieter. */
+.br-checkrow-label--zero { color: var(--ink-3); }
+
+/* — max price — */
+
+.br-price-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.br-price-row .range { flex: 1; min-width: 0; }
+.br-price-val {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  flex: none;
+}
+.br-price-val .num {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.br-price-per {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+/* — quick-filter switches — */
+
+.br-switchrow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.br-switchrow + .br-switchrow { margin-top: 12px; }
+.br-switch-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.br-switch-head .switch { flex: 1; min-width: 0; }
+.br-switch-count {
+  flex: none;
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.br-switchrow .field-hint {
+  padding-left: 50px; /* under the switch text, past the 40px track */
+}
+
+/* ============ results toolbar ============ */
+
+.br-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.br-toolrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.br-filters-btn { flex: none; }
+.br-filters-btn .badge { margin-inline-start: 2px; }
+
+.br-search {
+  position: relative;
+  flex: 1 1 200px;
+  min-width: 0;
+}
+.br-search-ico {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-3);
+  pointer-events: none;
+}
+.br-search .br-search-input { padding-left: 40px; }
+
+.br-sort-select {
+  flex: 0 1 232px;
+  min-width: 168px;
+}
+
+.br-chipsrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.br-chipsrow .btn { flex: none; }
+.br-chip-star {
+  display: inline-flex;
+  color: var(--star);
+  fill: var(--star);
+}
+
+/* ============ results grid ============ */
+
+.br-grid {
+  display: grid;
+  /* minmax(0,…) lets the track shrink below the cards' min-content width,
+     which the unbreakable meta rows would otherwise force wide. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .br-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Cards re-mount after filter changes and play their own fade-up;
+   this is the same gesture for the non-card blocks. */
+.br-anim { animation: fade-up var(--t-med) var(--ease) both; }
+
+/* ============ skeleton cards ============ */
+
+.br-sk {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+  min-height: 262px;
+}
+.br-sk-main {
+  display: flex;
+  gap: 14px;
+}
+/* .br-sk-scoped selectors out-specify .skeleton's border-radius whatever
+   the stylesheet order. */
+.br-sk .br-sk-ava {
+  flex: none;
+  width: 76px;
+  height: 76px;
+  border-radius: 20px;
+}
+.br-sk .br-sk-lines {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 8px;
+}
+.br-sk .br-sk-l {
+  height: 13px;
+  border-radius: var(--r-sm);
+}
+.br-sk .br-sk-chips {
+  display: flex;
+  gap: 8px;
+}
+.br-sk .br-sk-chip {
+  height: 24px;
+  border-radius: var(--r-pill);
+}
+.br-sk .br-sk-chip:nth-child(1) { width: 86px; }
+.br-sk .br-sk-chip:nth-child(2) { width: 62px; }
+.br-sk .br-sk-chip:nth-child(3) { width: 94px; }
+.br-sk .br-sk-foot {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.br-sk .br-sk-price {
+  width: 92px;
+  height: 26px;
+}
+.br-sk .br-sk-btn {
+  width: 118px;
+  height: 34px;
+  border-radius: var(--r-pill);
+}
+
+/* ============ empty state & small screens ============ */
+
+.br-empty { padding: 10px; }
+
+@media (max-width: 560px) {
+  .br-page {
+    gap: 18px;
+    padding-block: 22px 36px;
+  }
+  .br-head { gap: 7px; }
+  .br-title { font-size: 26px; }
+  .br-head .br-sub { font-size: 11px; }
+  .br-toolrow { gap: 8px; }
+  .br-sort-select { flex-basis: 100%; }
+  .br-sublist { max-height: 260px; }
+}

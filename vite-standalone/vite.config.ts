@@ -1,14 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import path from "node:path";
 
-// Parla as a pure Vite + React 18 app.
-// Copy ../src/parla and ../public next to this file, then: npm install && npm run dev
+// Tutorly as a pure Vite + React 18 app.
+// The full ../src/tutorly tree and the portrait assets are already copied in
+// (src/tutorly + public/), so: npm install && npm run dev works as-is.
 export default defineConfig({
   plugins: [react()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src"),
-    },
-  },
 });

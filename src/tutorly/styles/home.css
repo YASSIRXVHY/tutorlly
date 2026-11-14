@@ -449,3 +449,76 @@
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
 }
+
+/* ============ teach band (become a tutor) ============ */
+
+.home-teach {
+  position: relative;
+  overflow: hidden;
+  background: var(--brand-deep);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-2);
+  padding: 38px 28px;
+}
+@media (min-width: 768px) {
+  .home-teach { padding: 52px 56px; }
+}
+/* a faint ring motif — quiet, green-on-green */
+.home-teach::after {
+  content: "";
+  position: absolute;
+  right: -120px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 0 0 60px rgba(255, 255, 255, 0.03);
+  pointer-events: none;
+}
+.home-teach-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 620px;
+}
+.home-teach-eyebrow {
+  color: var(--accent);
+  letter-spacing: 0.15em;
+}
+.home-teach h2 {
+  color: #fff;
+  font-size: clamp(24px, 3.2vw, 33px);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.home-teach p {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0;
+}
+.home-teach-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.home-teach-props {
+  display: inline-flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.home-teach-props span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 13px;
+  font-weight: 600;
+}
+.home-teach-props svg { color: var(--accent); }

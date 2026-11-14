@@ -2,9 +2,9 @@
 
 /**
  * The admin console — monitoring for every teacher and student on the
- * platform: overview KPIs and charts, teacher roster, student body, lesson
- * feed, live rooms, and system status. Its own chrome (no marketplace
- * navbar), behind a one-click demo gate.
+ * platform: overview KPIs and charts, the tutor-application review queue,
+ * teacher roster, student body, lesson feed, live rooms, and system status.
+ * Its own chrome (no marketplace navbar), behind a one-click demo gate.
  */
 import { useState } from "react";
 import {
@@ -15,8 +15,9 @@ import {
   Radio,
   ShieldCheck,
   ArrowLeft,
+  Inbox,
 } from "lucide-react";
-import { navigate } from "../router/router";
+import { navigate, useRoute } from "../router/router";
 import {
   generateStudents,
   generateRecentLessons,
@@ -29,6 +30,7 @@ import {
   money,
 } from "../data/adminData";
 import { TUTORS } from "../data/tutors";
+import { pendingCount, useCommunityVersion } from "../data/community";
 import { subjectById } from "../data/subjects";
 import { Avatar } from "../components/common/Avatar";
 import {
@@ -38,15 +40,18 @@ import {
   LiveTab,
   SystemCard,
 } from "../components/admin/AdminTables";
+import { ApplicationsTab } from "../components/admin/ApplicationsTab";
 import { cx } from "../utils/misc";
 
 import "../styles/admin.css";
 
-type TabId = "overview" | "teachers" | "students" | "lessons" | "live";
+type TabId = "overview" | "applications" | "teachers" | "students" | "lessons" | "live";
 
 const ADMIN_FLAG = "tutorly.admin";
 
 export function AdminPage() {
+  const route = useRoute();
+  useCommunityVersion(); // pending-queue badge stays honest, decisions included
   const [entered, setEntered] = useState(() => {
     try {
       return localStorage.getItem(ADMIN_FLAG) === "1";
@@ -54,7 +59,9 @@ export function AdminPage() {
       return false;
     }
   });
-  const [tab, setTab] = useState<TabId>("overview");
+  const [tab, setTab] = useState<TabId>(() =>
+    route.query.tab === "applications" ? "applications" : "overview"
+  );
 
   if (!entered) {
     return <AdminGate onEnter={() => {
@@ -69,6 +76,7 @@ export function AdminPage() {
 
   const tabs: Array<{ id: TabId; label: string; icon: typeof LayoutDashboard; count: number | null }> = [
     { id: "overview", label: "Overview", icon: LayoutDashboard, count: null },
+    { id: "applications", label: "Applications", icon: Inbox, count: pendingCount() },
     { id: "teachers", label: "Teachers", icon: GraduationCap, count: TUTORS.length },
     { id: "students", label: "Students", icon: Users, count: generateStudents().length + 1 },
     { id: "lessons", label: "Lessons", icon: CalendarCheck, count: generateRecentLessons().length },
@@ -115,6 +123,8 @@ export function AdminPage() {
         <main className="adm-main">
           {tab === "overview" ? (
             <Overview onGo={(t) => setTab(t)} />
+          ) : tab === "applications" ? (
+            <ApplicationsTab />
           ) : tab === "teachers" ? (
             <TeachersTab />
           ) : tab === "students" ? (

@@ -5,7 +5,7 @@
  * rating with review count, tagline, subject chips, price with trial stamp,
  * favourite heart. The whole card is a profile link (overlay anchor pattern).
  */
-import { BadgeCheck, Heart } from "lucide-react";
+import { BadgeCheck, Heart, Sparkles } from "lucide-react";
 import type { Tutor } from "../../data/tutors";
 import { tutorSubjects, isOnline } from "../../data/tutors";
 import { Link } from "../../router/router";
@@ -64,7 +64,13 @@ export function TutorCard({ tutor }: { tutor: Tutor }) {
             <BadgeCheck size={16} className="tcard-verified" aria-label="Verified tutor" />
           </div>
           <div className="tcard-meta">
-            <Stars rating={tutor.rating} count={tutor.reviewCount} />
+            {tutor.reviewCount > 0 ? (
+              <Stars rating={tutor.rating} count={tutor.reviewCount} />
+            ) : (
+              <span className="tcard-new">
+                <Sparkles size={12} aria-hidden /> New on Tutorly
+              </span>
+            )}
             <span className="tcard-meta-dot" aria-hidden>·</span>
             <span>{tutor.country}</span>
             {online ? (

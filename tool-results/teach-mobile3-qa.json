@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "No floating dark circular \"N\" badge in the bottom-left corner (only the \"NH\" avatar inside the tutor card). And no, nothing overlaps the green \"View your live profile\" button — it sits cleanly at the bottom of the screen.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1794690012,
+  "id": "20261115050010d47c6f43866a4724",
+  "model": "glm-5.3-flash",
+  "object": "chat.completion",
+  "request_id": "20261115050010d47c6f43866a4724",
+  "usage": {
+    "completion_tokens": 52,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 423,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 475
+  }
+}

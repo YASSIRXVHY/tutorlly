@@ -1,0 +1,60 @@
+/*
+  Tutorly — design tokens.
+  Warm cream paper, deep forest green, one bright signal green.
+  Hand-rolled: no Tailwind, no UI kit, two Google fonts.
+*/
+:root {
+  /* ---- palette ---- */
+  --bg: #f7f4ed;            /* warm cream page */
+  --bg-2: #f0ecdf;          /* pressed cream (inset bands) */
+  --surface: #ffffff;       /* cards, sheets */
+  --surface-warm: #fbf9f2;  /* quiet panels */
+  --ink: #1c2b24;           /* near-black, green-cast */
+  --ink-2: #57685e;         /* muted prose */
+  --ink-3: #97a196;         /* faint meta */
+  --line: #e6e2d4;          /* hairlines */
+  --line-2: #d7d2c2;        /* stronger hairlines */
+
+  --brand: #0e3e32;         /* deep forest green — primary */
+  --brand-deep: #0a2c24;    /* hover / pressed */
+  --brand-tint: #e6efe3;    /* light green wash for tags */
+  --accent: #1ed65f;        /* bright signal green — CTA */
+  --accent-deep: #15c053;   /* CTA hover */
+  --accent-ink: #0b3b22;    /* text on accent */
+  --star: #f5a83c;          /* amber ratings */
+  --danger: #cc3d2e;        /* destructive */
+  --danger-tint: #faece8;
+
+  /* ---- type ---- */
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, "Segoe UI",
+    Helvetica, Arial, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+
+  /* ---- shape ---- */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+  --r-pill: 999px;
+
+  /* ---- elevation (soft, warm — never glassy) ---- */
+  --shadow-1: 0 1px 2px rgba(28, 43, 36, 0.05), 0 1px 1px rgba(28, 43, 36, 0.03);
+  --shadow-2: 0 2px 6px rgba(28, 43, 36, 0.06), 0 10px 28px rgba(28, 43, 36, 0.08);
+  --shadow-3: 0 6px 18px rgba(28, 43, 36, 0.12), 0 24px 56px rgba(28, 43, 36, 0.16);
+
+  /* ---- motion ---- */
+  --ease: cubic-bezier(0.22, 0.8, 0.26, 1);
+  --t-fast: 150ms;
+  --t-med: 260ms;
+
+  /* ---- layout ---- */
+  --container: 1128px;
+  --nav-h: 64px;
+
+  /* ---- z ---- */
+  --z-nav: 50;
+  --z-pop: 70;
+  --z-modal: 80;
+  --z-toast: 90;
+}

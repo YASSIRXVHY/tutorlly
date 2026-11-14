@@ -7,6 +7,7 @@
 import type { Specialty } from "./subjects";
 import { subjectById, LANG_EXAMS } from "./subjects";
 import { rng } from "../utils/rng";
+import { syncCommunityTutors } from "./community";
 
 export type Level = "Native" | "C2" | "C1" | "B2" | "B1" | "A2" | "A1";
 
@@ -695,6 +696,12 @@ const CODE_TO_NAME: Record<string, string> = {
   ru: "Russian",
   tw: "Twi",
   "zh-sichuan": "Sichuanese",
+  cs: "Czech",
+  pl: "Polish",
+  nl: "Dutch",
+  tr: "Turkish",
+  hi: "Hindi",
+  vi: "Vietnamese",
 };
 
 export function spokenLabel(code: string): string {
@@ -714,3 +721,14 @@ export function initialsOf(name: string): string {
 export function isOnline(tutorId: string, now = new Date()): boolean {
   return rng(tutorId, "online", now.getHours()).chance(0.58);
 }
+
+/*
+ * Community tutors — teachers approved through the "Become a tutor"
+ * application flow (data/community.ts) fold into this same array, so every
+ * consumer (search, profiles, booking, messages, admin) treats them exactly
+ * like the hand-authored catalogue. Re-exported for mutation points.
+ */
+if (typeof window !== "undefined") {
+  syncCommunityTutors();
+}
+export { syncCommunityTutors };

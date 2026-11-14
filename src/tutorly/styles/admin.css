@@ -550,3 +550,131 @@
 .adm-sys-probe--ok { color: var(--accent-deep); }
 .adm-sys-probe--bad { color: var(--danger); }
 .adm-sys-probe--checking { color: var(--ink-3); }
+
+/* ================= applications ================= */
+
+.adm-app-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.adm-app {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.adm-app-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.adm-app-id {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.adm-app-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.adm-app-name .chip { height: 20px; font-size: 10.5px; padding: 0 8px; }
+.adm-app-headline {
+  margin: 4px 0 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.adm-app-when {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  text-align: right;
+}
+.adm-app-bio {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.adm-app-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.adm-app-facts {
+  font-size: 11px;
+  color: var(--ink-3);
+  line-height: 1.7;
+}
+.adm-app-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+.adm-app-done {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.adm-app-done li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--ink);
+}
+.adm-app-done li:last-child { border-bottom: 0; }
+.adm-app-done-name { font-weight: 700; min-width: 0; }
+.adm-app-done .adm-minilink { margin-left: auto; flex: none; }
+.adm-app-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.adm-app-reason {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 11px 13px;
+  border: 1.5px solid var(--line-2);
+  border-radius: var(--r-md);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.adm-app-reason:hover { border-color: var(--brand); }
+.adm-app-reason:has(input:checked) {
+  border-color: var(--brand);
+  background: var(--brand-tint);
+  color: var(--ink);
+}
+.adm-app-reason input { margin-top: 3px; accent-color: var(--brand); }
+@media (max-width: 640px) {
+  .adm-app-head { flex-wrap: wrap; }
+  .adm-app-when { flex-direction: row; gap: 6px; align-items: baseline; }
+  .adm-app-done li { flex-wrap: wrap; row-gap: 4px; }
+}
