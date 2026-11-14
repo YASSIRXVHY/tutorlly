@@ -22,6 +22,39 @@ import { useApp, unreadTotal, isStudent } from "../../store/AppStore";
 import { Avatar } from "../common/Avatar";
 import { cx } from "../../utils/misc";
 
+/** Subjects the search bar hints at — the same short list the palette knows. */
+const SEARCH_HINTS = [
+  "Spanish",
+  "calculus",
+  "IELTS",
+  "guitar",
+  "Python",
+  "Japanese",
+  "statistics",
+  "French",
+];
+
+/**
+ * SearchHint — the rotating example query inside the navbar search pill:
+ * `Search “Spanish”`, `Search “calculus”`… with a blinking caret, so the bar
+ * reads as a live input, not a dead button. The swap is pure text (no motion
+ * beyond the caret, which the global reduced-motion switch already stills),
+ * and it is aria-hidden — the button's own aria-label stays stable.
+ */
+function SearchHint() {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setI((v) => (v + 1) % SEARCH_HINTS.length), 2600);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <span className="nav-search-rot">
+      {`“${SEARCH_HINTS[i]}”`}
+      <span className="nav-search-caret" aria-hidden />
+    </span>
+  );
+}
+
 export function Navbar() {
   const { state, dispatch } = useApp();
   const route = useRoute();
@@ -86,9 +119,17 @@ export function Navbar() {
           </nav>
 
           <button type="button" className="nav-search" onClick={openSearch} aria-label="Search tutors and subjects">
-            <Search size={15} className="nav-search-ico" aria-hidden />
-            <span className="nav-search-label">Search tutors, subjects…</span>
-            <span className="kbd nav-search-kbd" aria-hidden>⌘K</span>
+            <span className="nav-search-ico">
+              <Search size={15} aria-hidden />
+            </span>
+            <span className="nav-search-label" aria-hidden>
+              <span className="nav-search-verb">Search</span>
+              <SearchHint />
+            </span>
+            <span className="nav-search-keys">
+              <span className="kbd">⌘</span>
+              <span className="kbd">K</span>
+            </span>
           </button>
 
           <div className="nav-actions">
