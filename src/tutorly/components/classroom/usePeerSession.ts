@@ -17,8 +17,9 @@
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import Peer from "peerjs";
-import type { DataConnection, MediaConnection, PeerOptions } from "peerjs";
+import type { DataConnection, MediaConnection } from "peerjs";
 import type { Stroke } from "./Whiteboard";
+import { resolveBroker, gatewayPeerOptions, type BrokerInfo } from "./broker";
 
 export type PeerStatus = "idle" | "connecting" | "live" | "demo" | "failed";
 
@@ -47,6 +48,10 @@ const hostPeerId = (roomId: string) => `${HOST_PREFIX}-${roomId}-host`;
 function wait(ms: number): Promise<void> {
   return new Promise((res) => setTimeout(res, ms));
 }
+void wait;
+
+/** Broker errors worth one automatic gateway-relay retry before demo mode. */
+const BROKER_ERRORS = ["network", "server-error", "socket-error", "ssl-unavailable", "websocket-error"];
 
 export function usePeerSession({ roomId, role, enabled, onMessage }: PeerSessionOptions) {
   const [status, setStatus] = useState<PeerStatus>("idle");
@@ -62,6 +67,8 @@ export function usePeerSession({ roomId, role, enabled, onMessage }: PeerSession
   const demoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const attemptsRef = useRef(0);
+  const brokerRef = useRef<BrokerInfo | null>(null);
+  const fallbackTriedRef = useRef(false);
 
   useEffect(() => {
     msgRef.current = onMessage;
@@ -257,28 +264,40 @@ export function usePeerSession({ roomId, role, enabled, onMessage }: PeerSession
     const stream = await acquireMedia();
     setMyStream(stream);
 
-    /* Production uses the PeerJS cloud broker. A localStorage override
-       ("tutorly-peer-dev-server" = "host:port") lets sandboxes and offline
-       demos point at a local broker (see mini-services/peer-broker). */
-    let peerOpts: PeerOptions = { debug: 0 };
-    try {
-      const raw = localStorage.getItem("tutorly-peer-dev-server");
-      const m = raw ? /^([\w.-]+):(\d+)$/.exec(raw.trim()) : null;
-      if (m) {
-        peerOpts = {
-          host: m[1],
-          port: Number(m[2]),
-          path: "/",
-          secure: false,
-          debug: 0,
-          // Local loopback needs no STUN; host candidates suffice.
-          config: { iceServers: [] },
-        };
-      }
-    } catch { /* localStorage unavailable — cloud broker it is */ }
+    // Which signaling broker: explicit override, else origin default
+    // (cloud locally, gateway relay in the sandbox preview).
+    if (!brokerRef.current) brokerRef.current = resolveBroker();
+    const opts = brokerRef.current.opts;
 
     const makePeer = (id?: string) =>
-      id ? new Peer(id, peerOpts) : new Peer(peerOpts);
+      opts
+        ? id
+          ? new Peer(id, opts)
+          : new Peer(opts)
+        : id
+          ? new Peer(id, { debug: 0 })
+          : new Peer({ debug: 0 });
+
+    // One automatic retry through the gateway relay when the primary
+    // broker can't be reached (captive networks, blocked WebSockets).
+    const tryGatewayFallback = (): boolean => {
+      if (fallbackTriedRef.current || brokerRef.current?.mode === "gateway") return false;
+      fallbackTriedRef.current = true;
+      brokerRef.current = {
+        mode: "gateway",
+        label: "Gateway relay (auto-fallback)",
+        opts: gatewayPeerOptions(),
+      };
+      return true;
+    };
+
+    const restartViaGateway = () => {
+      try { peerRef.current?.destroy(); } catch { /* noop */ }
+      peerRef.current = null;
+      retryTimerRef.current = setTimeout(() => {
+        void startRef.current?.();
+      }, 900);
+    };
 
     try {
       if (role === "host") {
@@ -299,6 +318,8 @@ export function usePeerSession({ roomId, role, enabled, onMessage }: PeerSession
             retryTimerRef.current = setTimeout(() => {
               void startRef.current?.();
             }, 1600);
+          } else if (BROKER_ERRORS.includes(type ?? "") && !connRef.current && !endedRef.current && tryGatewayFallback()) {
+            restartViaGateway();
           } else if (type && type !== "peer-unavailable" && !connRef.current && !endedRef.current) {
             // Broker unreachable / network error — demo mode with a designed state.
             setStatus("demo");
@@ -313,13 +334,17 @@ export function usePeerSession({ roomId, role, enabled, onMessage }: PeerSession
             // Host isn't up yet — the wireGuest retry ladder handles it.
             return;
           }
+          if (BROKER_ERRORS.includes(type ?? "") && !connRef.current && !endedRef.current && tryGatewayFallback()) {
+            restartViaGateway();
+            return;
+          }
           if (type && !connRef.current && !endedRef.current) setStatus("demo");
         });
       }
     } catch {
       setStatus("failed");
     }
-     
+
   }, [acquireMedia, roomId, role, wireGuest, wireHost]);
 
   useEffect(() => {
@@ -357,8 +382,10 @@ export function usePeerSession({ roomId, role, enabled, onMessage }: PeerSession
       endedRef.current = true;
       teardown();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- start/teardown stable via refs
-  }, [enabled]);
+    // role/roomId in deps: if the identity settles late for any reason,
+    // the wrongly-roled peer is torn down and restarted correctly.
+     
+  }, [enabled, role, roomId]);
 
   return { status, myStream, remoteStream, cameraDenied, send, end };
 }

@@ -7,7 +7,7 @@
  * favourites and deterministic recommendations.
  */
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CalendarOff, CalendarPlus, Heart, History, MessageCircle, PlayCircle, Star } from "lucide-react";
+import { CalendarOff, CalendarPlus, Heart, History, MessageCircle, PlayCircle, Presentation, Star, Video } from "lucide-react";
 import { useApp } from "../store/AppStore";
 import { TUTORS, isOnline, tutorById, type Tutor } from "../data/tutors";
 import { subjectById } from "../data/subjects";
@@ -19,6 +19,7 @@ import { Link, navigate } from "../router/router";
 import { hhmmss, hourLabel, longDate, shortDate, slotDate, timeBucket } from "../utils/time";
 import { rng } from "../utils/rng";
 import { clamp, cx, formatMoney } from "../utils/misc";
+import { openRoomWindow } from "../utils/openRoom";
 import type { Lesson } from "../store/types";
 
 import "../styles/dashboard.css";
@@ -190,6 +191,35 @@ export function DashboardPage() {
             <div className="card dash-stat"><span className="dash-stat-num num">{hoursLabel(stats.minutes)}</span><span className="mono-label">hours learned</span></div>
             <div className="card dash-stat"><span className="dash-stat-num num">{stats.tutors}</span><span className="mono-label">tutors met</span></div>
             <div className="card dash-stat"><span className="dash-stat-num num">{state.favorites.length}</span><span className="mono-label">favourites saved</span></div>
+          </div>
+        </section>
+
+        <section className="dash-section" aria-label="Live classroom test bench">
+          <SectionHead eyebrow="P2P TEST BENCH" title="Test the live classroom"
+            sub="Two windows, one room — the demo teacher makes it a one-click test." />
+          <div className="card card--pad dash-bench">
+            <div className="dash-bench-copy">
+              <p>
+                Open the student side, then the demo teacher side — audio, video, the shared
+                whiteboard and chat sync peer-to-peer between the two windows, no server in the
+                middle.
+              </p>
+              <span className="field-hint">
+                Allow camera &amp; mic when asked; denied permissions degrade to camera-off and the
+                room still works. Signaling is relayed only to connect the two sides — the lesson
+                data itself never touches a server.
+              </span>
+            </div>
+            <div className="dash-bench-actions">
+              <button type="button" className="btn btn--primary" onClick={() => openRoomWindow("student")}>
+                <Video size={15} aria-hidden className="btn-ico" />
+                Open student window
+              </button>
+              <button type="button" className="btn btn--outline" onClick={() => openRoomWindow("tutor")}>
+                <Presentation size={15} aria-hidden className="btn-ico" />
+                Open demo teacher window
+              </button>
+            </div>
           </div>
         </section>
 

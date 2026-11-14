@@ -50,10 +50,23 @@ export function matchPath(pattern: string, path: string): Record<string, string>
 }
 
 export function useRoute(): Route {
-  const [route, setRoute] = useState<Route>({ path: "/", query: {} });
+  // Initialized synchronously from the hash: every consumer of the app is
+  // client-gated (the shell renders nothing until hydration settles), and a
+  // first render with an empty query made deep-linked roles — the demo
+  // teacher window — briefly mount under the wrong identity.
+  const [route, setRoute] = useState<Route>(() =>
+    typeof window === "undefined" ? { path: "/", query: {} } : parseHash()
+  );
 
   useEffect(() => {
-    const sync = () => setRoute(parseHash());
+    const sync = () =>
+      setRoute((prev) => {
+        const next = parseHash();
+        const same =
+          prev.path === next.path &&
+          JSON.stringify(prev.query) === JSON.stringify(next.query);
+        return same ? prev : next;
+      });
     sync();
     window.addEventListener("hashchange", sync);
     return () => window.removeEventListener("hashchange", sync);

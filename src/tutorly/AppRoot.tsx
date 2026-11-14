@@ -27,6 +27,7 @@ import { TutorProfilePage } from "./pages/TutorProfilePage";
 import { MessagesPage } from "./pages/MessagesPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { ClassroomPage } from "./pages/ClassroomPage";
+import { AdminPage } from "./pages/AdminPage";
 import { CATEGORIES } from "./data/subjects";
 
 export function AppRoot() {
@@ -75,20 +76,24 @@ function Shell() {
   const classroomMatch = matchPath("/classroom/:lessonId", route.path);
 
   let page: ReactNode;
-  let isClassroom = false;
+  let bareChrome = false;
 
   if (route.path === "/") page = <HomePage />;
   else if (route.path === "/browse") page = <BrowsePage />;
   else if (tutorMatch) page = <TutorProfilePage tutorId={tutorMatch.id} />;
   else if (route.path === "/messages") page = <MessagesPage />;
   else if (route.path === "/dashboard") page = <DashboardPage />;
-  else if (classroomMatch) {
+  else if (route.path === "/admin") {
+    // The admin console has its own chrome — a console, not a storefront.
+    page = <AdminPage />;
+    bareChrome = true;
+  } else if (classroomMatch) {
     page = <ClassroomPage lessonId={classroomMatch.lessonId} />;
-    isClassroom = true;
+    bareChrome = true;
   } else page = <NotFound />;
 
-  if (isClassroom) {
-    // The classroom is a room: full attention, no site chrome.
+  if (bareChrome) {
+    // The classroom and the admin console are full-attention screens:
     return (
       <div className="app-shell">
         <a
@@ -218,6 +223,8 @@ function Footer() {
               <Link className="foot-link" to="/messages">Messages</Link>
               <Link className="foot-link" to="/dashboard">My lessons</Link>
               <Link className="foot-link" to="/classroom/demo">Practice classroom</Link>
+              <Link className="foot-link" to="/classroom/demo?role=tutor">Demo teacher room</Link>
+              <Link className="foot-link" to="/admin">Admin console</Link>
               <button type="button" className="foot-link foot-link--btn" onClick={goHowItWorks}>
                 How it works
               </button>

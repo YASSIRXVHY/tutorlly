@@ -17,14 +17,23 @@ const { WebSocketServer } = require("ws");
 const clients = new Map(); // peer id -> ws
 
 const server = http.createServer((req, res) => {
-  const url = new URL(req.url, "http://localhost");
-  if (url.pathname.endsWith("/id")) {
+  // NOTE: through the platform gateway the whole peerjs URL arrives inside
+  // the query string ("/?XTransformPort=3031&j=/peerjs/id"), and the peerjs
+  // client's URLSearchParams re-encodes it ("%2Fpeerjs%2Fid") — so decode
+  // before matching.
+  let urlDecoded = req.url;
+  try {
+    urlDecoded = decodeURIComponent(req.url);
+  } catch {
+    /* malformed escape — fall back to the raw URL */
+  }
+  if (urlDecoded.includes("/id")) {
     res.writeHead(200, {
       "Content-Type": "text/plain; charset=utf-8",
       "Access-Control-Allow-Origin": "*",
     });
     res.end(crypto.randomUUID());
-    console.log(`[relay] id allocated -> ${res.statusMessage === "" ? "" : ""}`);
+    console.log(`[relay ${new Date().toISOString().slice(11, 23)}] id allocated -> ${res.statusMessage === "" ? "" : ""}`);
     return;
   }
   res.writeHead(404, { "Access-Control-Allow-Origin": "*" });
@@ -44,12 +53,12 @@ server.on("upgrade", (req, socket, head) => {
     if (clients.has(id)) {
       ws.send(JSON.stringify({ type: "ID-TAKEN" }));
       setTimeout(() => ws.close(4001, "id taken"), 250);
-      console.log(`[relay] ID-TAKEN ${id} — held by ws state: ${clients.get(id).readyState}`);
+      console.log(`[relay ${new Date().toISOString().slice(11, 23)}] ID-TAKEN ${id}`);
       return;
     }
     clients.set(id, ws);
     ws.send(JSON.stringify({ type: "OPEN" }));
-    console.log(`[relay] joined ${id} (${clients.size} online)`);
+    console.log(`[relay ${new Date().toISOString().slice(11, 23)}] joined ${id} (${clients.size} online)`);
     ws.on("message", (raw) => {
       let msg;
       try {
@@ -65,7 +74,7 @@ server.on("upgrade", (req, socket, head) => {
       msg.src = id;
       const dst = msg.dst;
       const dstWs = dst ? clients.get(dst) : null;
-      console.log(`[relay] msg ${msg.type} ${String(msg.src).slice(0, 12)} -> ${String(msg.dst).slice(0, 12)}`);
+      console.log(`[relay ${new Date().toISOString().slice(11, 23)}] msg ${msg.type} ${String(msg.src).slice(0, 12)} -> ${String(msg.dst).slice(0, 12)}`);
       if (dstWs && dstWs.readyState === 1) {
         dstWs.send(JSON.stringify(msg));
       } else if (msg.src) {
@@ -74,7 +83,7 @@ server.on("upgrade", (req, socket, head) => {
     });
     ws.on("close", () => {
       if (clients.get(id) === ws) clients.delete(id);
-      console.log(`[relay] left ${id} (${clients.size} online)`);
+      console.log(`[relay ${new Date().toISOString().slice(11, 23)}] left ${id} (${clients.size} online)`);
     });
     ws.on("error", () => {});
   });

@@ -15,6 +15,7 @@ import {
   Presentation,
   CornerDownLeft,
   ArrowRight,
+  ShieldCheck,
 } from "lucide-react";
 import { useApp } from "../../store/AppStore";
 import { navigate } from "../../router/router";
@@ -165,6 +166,8 @@ function buildEntries(qRaw: string): Entry[] {
     { id: "p-messages", group: "Pages", label: "Messages", icon: MessageCircle, hint: "Conversations with your tutors", go: () => navigate("/messages") },
     { id: "p-dash", group: "Pages", label: "My lessons", icon: CalendarCheck, hint: "Countdowns, history and reviews", go: () => navigate("/dashboard") },
     { id: "p-demo", group: "Pages", label: "Practice classroom", icon: Presentation, hint: "The live room with whiteboard — no booking needed", go: () => navigate("/classroom/demo") },
+    { id: "p-demo-teacher", group: "Pages", label: "Practice classroom — teacher side", icon: Presentation, hint: "Join the practice room as the demo teacher device", go: () => navigate("/classroom/demo?role=tutor") },
+    { id: "p-admin", group: "Pages", label: "Admin console", icon: ShieldCheck, hint: "Monitor teachers, students, lessons and live rooms", go: () => navigate("/admin") },
   ];
 
   const subjectEntries: Entry[] = SUBJECTS.map((s) => {
