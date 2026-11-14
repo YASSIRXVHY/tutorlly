@@ -1,0 +1,646 @@
+/* ============================================================
+   PARLA — booking: date strip, slots, packages, checkout,
+   and the boarding pass (the signature moment).
+   ============================================================ */
+
+/* ---------- Booking footer inside the modal ---------- */
+.bookfoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.bookfoot-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bookfoot-price {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ---------- Date strip ---------- */
+.datestrip-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.datestrip-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.datestrip {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-strong) transparent;
+}
+
+.datestrip::-webkit-scrollbar {
+  height: 8px;
+}
+
+.datestrip::-webkit-scrollbar-thumb {
+  background: var(--ink-3);
+}
+
+.dateslot {
+  flex: none;
+  width: 74px;
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px 6px;
+  transition: border-color var(--dur-fast) linear, background var(--dur-fast) linear,
+    transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.dateslot:not(:disabled):hover {
+  border-color: var(--ink);
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-1);
+}
+
+.dateslot--active {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.dateslot--active .dateslot-dow,
+.dateslot--active .dateslot-mon,
+.dateslot--active .dateslot-count {
+  color: rgba(246, 241, 229, 0.7);
+}
+
+.dateslot--active .dateslot-day {
+  color: var(--paper);
+}
+
+.dateslot--empty {
+  opacity: 0.45;
+}
+
+.dateslot-dow {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.dateslot-day {
+  font-family: var(--font-serif);
+  font-variation-settings: "opsz" 72, "WONK" 1;
+  font-weight: 640;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.dateslot-mon {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+}
+
+.dateslot-count {
+  font-size: 8.5px;
+  margin-top: 3px;
+}
+
+/* ---------- Slot grid ---------- */
+.slotgrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.slotgroup-head {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 5px;
+  margin-bottom: 8px;
+}
+
+.slotgroup-count {
+  color: var(--ink-3);
+}
+
+.slotgroup-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+  gap: 7px;
+}
+
+.slotbtn {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  border: 1px solid var(--ink);
+  background: var(--paper-raised);
+  color: var(--ink);
+  padding: 9px 6px;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) linear;
+}
+
+.slotbtn:not(:disabled):hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-1);
+}
+
+.slotbtn--selected {
+  background: var(--accent);
+  border-color: var(--accent-deep);
+  color: #fdf6f2;
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-1);
+}
+
+.slotbtn:disabled {
+  cursor: not-allowed;
+}
+
+.slotbtn--closed {
+  border-color: var(--rule);
+  color: var(--ink-3);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  background: var(--paper);
+}
+
+.slotbtn--booked {
+  border-color: var(--spruce);
+  color: var(--spruce);
+  background: var(--spruce-wash);
+  text-decoration: none;
+}
+
+.slotbtn-flag {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.slotbtn--booked .slotbtn-flag {
+  color: var(--spruce);
+}
+
+/* ---------- Package cards ---------- */
+.packcards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--rule);
+  padding-top: var(--sp-4);
+}
+
+.packcards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .packcards-row { grid-template-columns: 1fr; }
+
+  .packcard-blurb { display: none; }
+}
+
+.packcard {
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+  padding: 12px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color var(--dur-fast) linear, transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.packcard:hover {
+  border-color: var(--ink);
+}
+
+.packcard--active {
+  border-color: var(--ink);
+  background: var(--paper);
+  box-shadow: var(--shadow-2);
+  transform: translate(-2px, -2px);
+}
+
+.packcard--active::before {
+  content: "SELECTED";
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: #fdf6f2;
+  background: var(--accent);
+  padding: 2px 6px;
+  align-self: flex-start;
+}
+
+.packcard-name {
+  font-family: var(--font-serif);
+  font-weight: 640;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.packcard-blurb {
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+
+.packcard-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.packcard-discount {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #fdf6f2;
+  background: var(--spruce);
+  padding: 2px 6px;
+}
+
+.packcard-per {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+/* ---------- Checkout ---------- */
+.invoice {
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+}
+
+.invoice-head {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--paper-deep);
+}
+
+.invoice-title {
+  font-family: var(--font-serif);
+  font-weight: 640;
+  font-size: 17px;
+}
+
+.invoice-rows {
+  padding: 6px 14px;
+}
+
+.invoice-total {
+  border-bottom: none;
+}
+
+.invoice-total dt,
+.invoice-total dd {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.invoice-discount {
+  color: var(--spruce);
+}
+
+.invoice-dates {
+  list-style: none;
+  padding: 10px 14px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.invoice-note {
+  padding: 10px 14px 12px;
+  border-top: 1px dashed var(--rule);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.payform {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.payform-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+
+.cc-wrap {
+  position: relative;
+}
+
+.cc-ico {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-3);
+  pointer-events: none;
+}
+
+.paybtn {
+  margin-top: 4px;
+}
+
+.payform-links {
+  display: flex;
+  justify-content: center;
+}
+
+.pay-processing {
+  border: 1px dashed var(--rule-strong);
+  padding: var(--sp-6) var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+  text-align: center;
+}
+
+.pay-processing p {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* ---------- BOARDING PASS — the signature moment ---------- */
+.boardingpass {
+  display: grid;
+  grid-template-columns: 1fr 190px;
+  border: 1px solid var(--ink);
+  background: var(--paper-raised);
+  animation: parla-ticket-in var(--dur-slow) var(--ease-out);
+  transform: rotate(-1deg);
+  margin: 4px 8px 10px 4px;
+}
+
+@media (max-width: 640px) {
+  .boardingpass {
+    grid-template-columns: 1fr;
+    transform: none;
+    margin-inline: 0;
+  }
+}
+
+.bp-main {
+  padding: 0 0 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bp-routelabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: var(--accent);
+  color: #fdf6f2;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+}
+
+.bp-class {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 2px 7px;
+}
+
+.bp-route {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 14px 10px;
+}
+
+.bp-from,
+.bp-to {
+  font-family: var(--font-serif);
+  font-variation-settings: "opsz" 144, "WONK" 1;
+  font-weight: 900;
+  font-size: clamp(15px, 3vw, 22px);
+  letter-spacing: 0.01em;
+}
+
+.bp-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.bp-arrow-glyph {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.bp-fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 14px;
+  padding: 4px 14px 12px;
+}
+
+@media (max-width: 520px) {
+  .bp-fields { grid-template-columns: repeat(2, 1fr); }
+}
+
+.bp-fields > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.bp-fields dt {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.bp-fields dd {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.bp-series {
+  border-top: 1px solid var(--rule);
+  margin: 0 14px;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.bp-series-dates {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.bp-fineprint {
+  padding: 10px 14px 2px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+}
+
+/* Perforation between main and stub */
+.bp-perf {
+  border-left: 2px dashed var(--ink);
+  position: relative;
+}
+
+@media (max-width: 640px) {
+  .bp-perf {
+    border-left: none;
+    border-top: 2px dashed var(--ink);
+    margin: 0 18px;
+  }
+}
+
+.bp-perf::before,
+.bp-perf::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+}
+
+.bp-perf::before {
+  left: -8px;
+  top: -8px;
+}
+
+.bp-perf::after {
+  left: -8px;
+  bottom: -8px;
+}
+
+@media (max-width: 640px) {
+  .bp-perf::before {
+    left: -8px;
+    top: -8px;
+  }
+
+  .bp-perf::after {
+    left: auto;
+    right: -8px;
+    top: -8px;
+    bottom: auto;
+  }
+}
+
+/* Stub */
+.bp-stub {
+  padding: 12px 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--paper);
+}
+
+.bp-stub-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.bp-brand {
+  font-family: var(--font-serif);
+  font-variation-settings: "opsz" 144, "WONK" 1;
+  font-weight: 900;
+  font-size: 20px;
+}
+
+.bp-stub-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.bp-ticketno {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.bp-stub-tz .mono-label {
+  text-align: right;
+}

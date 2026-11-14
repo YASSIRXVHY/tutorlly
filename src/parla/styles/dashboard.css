@@ -1,0 +1,339 @@
+/* ============================================================
+   PARLA — dashboard: the study record
+   ============================================================ */
+
+.dash-load {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.dashgrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--sp-6);
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .dashgrid { grid-template-columns: 1fr; }
+}
+
+/* A fully empty ledger takes the whole stage instead of a side column. */
+.dash-empty-grid {
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+}
+
+.dashmain {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+  min-width: 0;
+}
+
+.dashside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  position: sticky;
+  top: 110px;
+}
+
+@media (max-width: 960px) {
+  .dashside { position: static; }
+}
+
+.dash-section {
+  border-top: 1px solid var(--rule);
+  padding-top: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.dash-section--full {
+  margin-top: var(--sp-7);
+}
+
+.dash-h2 {
+  font-size: 21px;
+}
+
+.dash-h2-ico {
+  color: var(--accent-deep);
+}
+
+.dash-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.dash-side-note {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  border: 1px dashed var(--rule-strong);
+  padding: 12px 14px;
+}
+
+.dash-saved,
+.dash-recs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ---------- Next lesson ---------- */
+.nextlesson {
+  border: 1px solid var(--ink);
+  background: var(--paper-raised);
+  box-shadow: var(--shadow-2);
+  display: flex;
+  flex-direction: column;
+}
+
+.nextlesson-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper);
+  flex-wrap: wrap;
+}
+
+.nextlesson-tutor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: 10px 16px 0;
+  flex-wrap: wrap;
+}
+
+.nextlesson-clock {
+  padding: 18px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nextlesson-count {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: clamp(44px, 8vw, 72px);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.nextlesson-meter {
+  margin-top: 6px;
+}
+
+.nextlesson-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: 12px 16px 16px;
+  border-top: 1px dashed var(--rule);
+  flex-wrap: wrap;
+}
+
+/* ---------- Lesson list ---------- */
+.lessonlist {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.lessonrow {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto auto;
+  gap: var(--sp-3);
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.lessonrow-date {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.lessonrow-when {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+  border-left: 3px solid transparent;
+  padding-left: 10px;
+}
+
+.lessonrow--upcoming .lessonrow-when { border-left-color: var(--ink); }
+.lessonrow--completed .lessonrow-when { border-left-color: var(--spruce); }
+.lessonrow--cancelled .lessonrow-when { border-left-color: var(--rule); }
+
+.lessonrow-what {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.lessonrow-tutor {
+  font-family: var(--font-serif);
+  font-weight: 640;
+  font-size: 16px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.lessonrow-tutor:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.lessonrow-notes {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-2);
+  line-height: 1.4;
+  max-width: 60ch;
+}
+
+.lessonrow-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.lessonrow-confirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  border: 1px solid var(--accent-deep);
+  background: var(--accent-wash);
+  padding: 8px 10px;
+}
+
+.lessonrow-confirm > span:first-child {
+  font-family: var(--font-serif);
+  font-weight: 640;
+  font-size: 14.5px;
+}
+
+.lessonrow-confirm-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-2);
+}
+
+@media (max-width: 720px) {
+  .lessonrow {
+    grid-template-columns: 56px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+  }
+
+  .lessonrow-status {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .lessonrow-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    padding-top: 4px;
+  }
+}
+
+/* ---------- Review modal internals ---------- */
+.reviewfoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.review-lessonline {
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 10px;
+}
+
+.review-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.review-tags .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.review-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  border-top: 1px dashed var(--rule-strong);
+  padding-top: 12px;
+}
+
+.review-note svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent-deep);
+}
+
+.review-filed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  align-items: flex-start;
+}
+
+.review-filed-stamp {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--spruce);
+  border: 3px double var(--spruce);
+  padding: 6px 14px;
+  transform: rotate(-4deg);
+  animation: parle-stamp-in var(--dur-med) var(--ease-out);
+}
+
+.review-filed p {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.review-filed-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}

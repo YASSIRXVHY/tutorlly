@@ -1,0 +1,464 @@
+/* ============================================================
+   PARLA — tutor profile page
+   ============================================================ */
+
+.profile-split {
+  grid-template-columns: minmax(0, 1fr) 300px;
+}
+
+@media (max-width: 960px) {
+  .profile-split { grid-template-columns: 1fr; }
+}
+
+.profile-load {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-load-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--sp-5);
+}
+
+@media (max-width: 760px) {
+  .profile-load-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Masthead ---------- */
+.crumbs {
+  display: flex;
+  gap: 8px;
+  color: var(--ink-3);
+  padding-bottom: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.crumbs a {
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+
+.profile-mast {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: var(--sp-5);
+}
+
+.profile-name {
+  font-family: var(--font-serif);
+  font-variation-settings: "opsz" 144, "WONK" 1;
+  font-weight: 640;
+  font-size: clamp(38px, 6vw, 62px);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
+.profile-tagline {
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink-2);
+}
+
+.profile-meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.profile-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.profile-meta svg {
+  width: 12px;
+  height: 12px;
+}
+
+.profile-cc {
+  border: 1px solid var(--ink);
+  background: var(--paper-raised);
+  padding: 2px 6px;
+}
+
+.profile-native {
+  color: var(--spruce);
+}
+
+/* ---------- Stats ---------- */
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding-bottom: var(--sp-5);
+}
+
+@media (max-width: 720px) {
+  .profile-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---------- Intro video ---------- */
+.profile-video-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: var(--sp-5);
+}
+
+.introvideo {
+  border: 1px solid var(--ink);
+  background: var(--paper-raised);
+  display: flex;
+  flex-direction: column;
+}
+
+.introvideo-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--paper-deep);
+  border-bottom: 1px solid var(--ink);
+}
+
+.introvideo-pan {
+  position: absolute;
+  inset: -6% -4%;
+  transform: scale(1.02);
+}
+
+.introvideo-pan--run {
+  animation: introvideo-pan 26s ease-in-out infinite alternate;
+}
+
+@keyframes introvideo-pan {
+  0% { transform: scale(1.02) translate(0, 0); }
+  100% { transform: scale(1.12) translate(-2.5%, -2%); }
+}
+
+.introvideo-playbtn {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-2);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.introvideo-playbtn:hover {
+  background: var(--accent);
+  color: #fdf6f2;
+  border-color: var(--accent-deep);
+  transform: translate(-1px, -1px);
+}
+
+.introvideo-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.introvideo-caption {
+  padding: 14px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 86px;
+}
+
+.introvideo-line {
+  font-family: var(--font-serif);
+  font-weight: 640;
+  font-size: 19px;
+  line-height: 1.3;
+  animation: parla-ticker-up var(--dur-med) var(--ease-out);
+}
+
+.introvideo-sub {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+
+.introvideo-progress {
+  height: 10px;
+  background: var(--paper-deep);
+  border-top: 1px solid var(--rule);
+  cursor: pointer;
+  position: relative;
+}
+
+.introvideo-progress:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.introvideo-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--accent);
+}
+
+.introvideo-timecode {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 16px 10px;
+  color: var(--ink-3);
+}
+
+/* ---------- Tabs ---------- */
+.profile-tabs {
+  margin-bottom: var(--sp-4);
+}
+
+/* ---------- About ---------- */
+.profile-about {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.profile-bio-p {
+  font-size: 16.5px;
+  line-height: 1.65;
+  max-width: 66ch;
+  text-wrap: pretty;
+}
+
+.profile-langs ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.spokenlang {
+  display: grid;
+  grid-template-columns: 130px 64px 1fr;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+@media (max-width: 560px) {
+  .spokenlang { grid-template-columns: 1fr 64px; }
+
+  .spokenlang-meter { display: none; }
+}
+
+.spokenlang-name {
+  font-family: var(--font-serif);
+  font-weight: 640;
+  font-size: 16px;
+}
+
+.spokenlang-level {
+  text-align: right;
+}
+
+.spokenlang-meter {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.spokenlang-meter i {
+  width: 16px;
+  height: 9px;
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+}
+
+.spokenlang-meter i.on {
+  background: var(--spruce);
+  border-color: var(--spruce);
+}
+
+.profile-specialty-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.profile-facts {
+  border-top: 1px solid var(--rule);
+}
+
+/* ---------- Reviews ---------- */
+.profile-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.reviewdist {
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+  padding: var(--sp-4);
+}
+
+.reviewdist-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 10px;
+}
+
+.reviewdist-note {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.reviewlist {
+  list-style: none;
+  max-height: 560px;
+  display: flex;
+  flex-direction: column;
+}
+
+.reviewitem {
+  border-bottom: 1px solid var(--rule-soft);
+  padding: var(--sp-4) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reviewitem-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.reviewitem-author {
+  font-family: var(--font-serif);
+  font-weight: 640;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.reviewitem-date {
+  margin-left: auto;
+  color: var(--ink-3);
+}
+
+.reviewitem-text {
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 72ch;
+}
+
+.reviewitem-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.reviewitem-tags {
+  display: inline-flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Sidebar / booking panel ---------- */
+.profile-side {
+  position: sticky;
+  top: 110px;
+}
+
+@media (max-width: 960px) {
+  .profile-side { position: static; }
+}
+
+.bookpanel {
+  border: 1px solid var(--ink);
+  background: var(--paper-raised);
+  box-shadow: var(--shadow-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+}
+
+.bookpanel-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.bookpanel-openings {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--rule);
+  padding-top: var(--sp-3);
+}
+
+.bookpanel-openings ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.bookpanel-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bookpanel-actions .btn {
+  flex: 1;
+}
+
+.bookpanel-note {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  border-top: 1px solid var(--rule);
+  padding-top: var(--sp-3);
+}
+
+.bookpanel-note svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  margin-top: 3px;
+  color: var(--spruce);
+}

@@ -1,0 +1,1168 @@
+     1→/* ============================================================
+     2→   PARLA — shared UI components (hand-written, no framework)
+     3→   Buttons, fields, chips, pills, cards, modals, toasts, atoms.
+     4→   ============================================================ */
+     5→
+     6→/* ============================================================
+     7→   BUTTONS — mono uppercase, sharp, hard-shadow on press
+     8→   ============================================================ */
+     9→.btn {
+    10→  display: inline-flex;
+    11→  align-items: center;
+    12→  justify-content: center;
+    13→  gap: 8px;
+    14→  font-family: var(--font-mono);
+    15→  font-size: 12px;
+    16→  font-weight: 600;
+    17→  letter-spacing: 0.09em;
+    18→  text-transform: uppercase;
+    19→  color: var(--ink);
+    20→  background: var(--paper-raised);
+    21→  border: 1px solid var(--ink);
+    22→  padding: 13px 20px;
+    23→  min-height: 44px;
+    24→  text-decoration: none;
+    25→  white-space: nowrap;
+    26→  transition: transform var(--dur-fast) var(--ease-out),
+    27→    box-shadow var(--dur-fast) var(--ease-out),
+    28→    background-color var(--dur-fast) linear;
+    29→}
+    30→
+    31→.btn:disabled,
+    32→.btn[aria-disabled="true"] {
+    33→  opacity: 0.45;
+    34→  cursor: not-allowed;
+    35→}
+    36→
+    37→.btn--solid {
+    38→  background: var(--ink);
+    39→  color: var(--paper);
+    40→}
+    41→
+    42→.btn--solid:hover:not(:disabled) {
+    43→  transform: translate(-2px, -2px);
+    44→  box-shadow: var(--shadow-2);
+    45→}
+    46→
+    47→.btn--accent {
+    48→  background: var(--accent);
+    49→  border-color: var(--accent-deep);
+    50→  color: #fdf6f2;
+    51→}
+    52→
+    53→.btn--accent:hover:not(:disabled) {
+    54→  background: var(--accent-deep);
+    55→  transform: translate(-2px, -2px);
+    56→  box-shadow: var(--shadow-2);
+    57→}
+    58→
+    59→.btn--outline:hover:not(:disabled) {
+    60→  background: var(--paper);
+    61→  transform: translate(-2px, -2px);
+    62→  box-shadow: var(--shadow-2);
+    63→}
+    64→
+    65→.btn--ghost {
+    66→  border-color: transparent;
+    67→  background: transparent;
+    68→}
+    69→
+    70→.btn--ghost:hover:not(:disabled) {
+    71→  border-color: var(--ink);
+    72→}
+    73→
+    74→.btn--sm {
+    75→  padding: 8px 14px;
+    76→  min-height: 36px;
+    77→  font-size: 11px;
+    78→}
+    79→
+    80→.btn--block {
+    81→  width: 100%;
+    82→}
+    83→
+    84→.btn--danger {
+    85→  color: var(--accent-deep);
+    86→  border-color: var(--accent-deep);
+    87→}
+    88→
+    89→.btn--danger:hover:not(:disabled) {
+    90→  background: var(--accent-wash);
+    91→}
+    92→
+    93→.btn .btn-ico {
+    94→  width: 15px;
+    95→  height: 15px;
+    96→  flex: none;
+    97→}
+    98→
+    99→/* Icon button — square, hairline, for toolbar actions */
+   100→.icon-btn {
+   101→  display: inline-flex;
+   102→  align-items: center;
+   103→  justify-content: center;
+   104→  width: 40px;
+   105→  height: 40px;
+   106→  border: 1px solid var(--rule);
+   107→  background: var(--paper-raised);
+   108→  color: var(--ink-2);
+   109→  transition: border-color var(--dur-fast) linear,
+   110→    color var(--dur-fast) linear, transform var(--dur-fast) var(--ease-out),
+   111→    box-shadow var(--dur-fast) var(--ease-out);
+   112→}
+   113→
+   114→.icon-btn:hover {
+   115→  border-color: var(--ink);
+   116→  color: var(--ink);
+   117→}
+   118→
+   119→.icon-btn:active {
+   120→  transform: translate(1px, 1px);
+   121→  box-shadow: none;
+   122→}
+   123→
+   124→.icon-btn--sm {
+   125→  width: 32px;
+   126→  height: 32px;
+   127→}
+   128→
+   129→.icon-btn--active {
+   130→  background: var(--ink);
+   131→  color: var(--paper);
+   132→  border-color: var(--ink);
+   133→}
+   134→
+   135→/* ============================================================
+   136→   FIELDS — mono inputs with a printed-form feel
+   137→   ============================================================ */
+   138→.field {
+   139→  display: flex;
+   140→  flex-direction: column;
+   141→  gap: 6px;
+   142→}
+   143→
+   144→.field > .field-label {
+   145→  font-family: var(--font-mono);
+   146→  font-size: 10.5px;
+   147→  font-weight: 600;
+   148→  letter-spacing: 0.14em;
+   149→  text-transform: uppercase;
+   150→  color: var(--ink-2);
+   151→}
+   152→
+   153→.field .field-hint {
+   154→  font-family: var(--font-mono);
+   155→  font-size: 11px;
+   156→  color: var(--ink-3);
+   157→}
+   158→
+   159→.input,
+   160→.select,
+   161→.textarea {
+   162→  font-family: var(--font-mono);
+   163→  font-size: 14px;
+   164→  color: var(--ink);
+   165→  background: var(--paper-raised);
+   166→  border: 1px solid var(--ink);
+   167→  padding: 12px 14px;
+   168→  min-height: 44px;
+   169→  width: 100%;
+   170→  border-radius: 0;
+   171→  transition: box-shadow var(--dur-fast) var(--ease-out);
+   172→}
+   173→
+   174→.input::placeholder,
+   175→.textarea::placeholder {
+   176→  color: var(--ink-3);
+   177→}
+   178→
+   179→.input:hover,
+   180→.textarea:hover {
+   181→  box-shadow: var(--shadow-1);
+   182→}
+   183→
+   184→.field--error .input,
+   185→.input[aria-invalid="true"] {
+   186→  border-color: var(--accent);
+   187→  background: var(--accent-wash);
+   188→}
+   189→
+   190→.field-error {
+   191→  display: flex;
+   192→  align-items: flex-start;
+   193→  gap: 6px;
+   194→  font-family: var(--font-mono);
+   195→  font-size: 11px;
+   196→  line-height: 1.5;
+   197→  color: var(--accent-deep);
+   198→}
+   199→
+   200→.field-error::before {
+   201→  content: "!";
+   202→  font-weight: 600;
+   203→  border: 1px solid var(--accent-deep);
+   204→  width: 14px;
+   205→  height: 14px;
+   206→  display: inline-flex;
+   207→  align-items: center;
+   208→  justify-content: center;
+   209→  font-size: 10px;
+   210→  flex: none;
+   211→  margin-top: 1px;
+   212→}
+   213→
+   214→.textarea {
+   215→  min-height: 96px;
+   216→  resize: vertical;
+   217→  line-height: 1.55;
+   218→}
+   219→
+   220→/* Select — native, but printed */
+   221→.select {
+   222→  appearance: none;
+   223→  padding-right: 36px;
+   224→  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%231a150f' stroke-width='1.5'/%3E%3C/svg%3E");
+   225→  background-repeat: no-repeat;
+   226→  background-position: right 14px center;
+   227→  cursor: pointer;
+   228→}
+   229→
+   230→/* Checkbox — a little printed box with an ink check */
+   231→.check {
+   232→  display: flex;
+   233→  align-items: center;
+   234→  gap: 10px;
+   235→  cursor: pointer;
+   236→  min-height: 36px;
+   237→  user-select: none;
+   238→}
+   239→
+   240→.check input {
+   241→  position: absolute;
+   242→  opacity: 0;
+   243→  width: 1px;
+   244→  height: 1px;
+   245→}
+   246→
+   247→.check .check-box {
+   248→  width: 16px;
+   249→  height: 16px;
+   250→  border: 1px solid var(--ink);
+   251→  background: var(--paper-raised);
+   252→  flex: none;
+   253→  display: grid;
+   254→  place-items: center;
+   255→  transition: background var(--dur-fast) linear;
+   256→}
+   257→
+   258→.check .check-box svg {
+   259→  width: 10px;
+   260→  height: 10px;
+   261→  color: var(--paper);
+   262→  opacity: 0;
+   263→  transform: scale(0.5);
+   264→  transition: opacity var(--dur-fast) linear, transform var(--dur-fast) var(--ease-out);
+   265→}
+   266→
+   267→.check:hover .check-box {
+   268→  box-shadow: var(--shadow-1);
+   269→}
+   270→
+   271→.check input:checked + .check-box {
+   272→  background: var(--ink);
+   273→}
+   274→
+   275→.check input:checked + .check-box svg {
+   276→  opacity: 1;
+   277→  transform: scale(1);
+   278→}
+   279→
+   280→.check input:focus-visible + .check-box {
+   281→  outline: 2px solid var(--accent);
+   282→  outline-offset: 2px;
+   283→}
+   284→
+   285→.check .check-text {
+   286→  font-family: var(--font-mono);
+   287→  font-size: 12px;
+   288→  color: var(--ink-2);
+   289→}
+   290→
+   291→.check .check-count {
+   292→  font-family: var(--font-mono);
+   293→  font-size: 11px;
+   294→  color: var(--ink-3);
+   295→  margin-left: auto;
+   296→}
+   297→
+   298→/* Switch — native only toggle, printed like a rail ticket punch */
+   299→.switch {
+   300→  display: flex;
+   301→  align-items: center;
+   302→  gap: 12px;
+   303→  cursor: pointer;
+   304→  user-select: none;
+   305→}
+   306→
+   307→.switch input {
+   308→  position: absolute;
+   309→  opacity: 0;
+   310→  width: 1px;
+   311→  height: 1px;
+   312→}
+   313→
+   314→.switch .switch-track {
+   315→  width: 44px;
+   316→  height: 24px;
+   317→  border: 1px solid var(--ink);
+   318→  background: var(--paper-deep);
+   319→  position: relative;
+   320→  flex: none;
+   321→  transition: background var(--dur-med) linear;
+   322→}
+   323→
+   324→.switch .switch-track::after {
+   325→  content: "";
+   326→  position: absolute;
+   327→  top: 2px;
+   328→  left: 2px;
+   329→  width: 18px;
+   330→  height: 18px;
+   331→  background: var(--ink);
+   332→  transition: transform var(--dur-med) var(--ease-out),
+   333→    background var(--dur-med) linear;
+   334→}
+   335→
+   336→.switch input:checked + .switch-track {
+   337→  background: var(--accent-tint);
+   338→  border-color: var(--accent-deep);
+   339→}
+   340→
+   341→.switch input:checked + .switch-track::after {
+   342→  transform: translateX(20px);
+   343→  background: var(--accent);
+   344→}
+   345→
+   346→.switch input:focus-visible + .switch-track {
+   347→  outline: 2px solid var(--accent);
+   348→  outline-offset: 2px;
+   349→}
+   350→
+   351→/* Range slider — a rule with a diamond thumb */
+   352→.range {
+   353→  -webkit-appearance: none;
+   354→  appearance: none;
+   355→  width: 100%;
+   356→  height: 28px;
+   357→  background: transparent;
+   358→  cursor: pointer;
+   359→}
+   360→
+   361→.range::-webkit-slider-runnable-track {
+   362→  height: 2px;
+   363→  background: var(--ink);
+   364→}
+   365→
+   366→.range::-moz-range-track {
+   367→  height: 2px;
+   368→  background: var(--ink);
+   369→}
+   370→
+   371→.range::-webkit-slider-thumb {
+   372→  -webkit-appearance: none;
+   373→  appearance: none;
+   374→  width: 18px;
+   375→  height: 18px;
+   376→  background: var(--accent);
+   377→  border: 1px solid var(--ink);
+   378→  transform: rotate(45deg);
+   379→  margin-top: -8px;
+   380→  box-shadow: var(--shadow-1);
+   381→}
+   382→
+   383→.range::-moz-range-thumb {
+   384→  width: 18px;
+   385→  height: 18px;
+   386→  background: var(--accent);
+   387→  border: 1px solid var(--ink);
+   388→  border-radius: 0;
+   389→  transform: rotate(45deg);
+   390→  box-shadow: var(--shadow-1);
+   391→}
+   392→
+   393→.range:focus-visible::-webkit-slider-thumb {
+   394→  outline: 2px solid var(--accent);
+   395→  outline-offset: 3px;
+   396→}
+   397→
+   398→/* ============================================================
+   399→   CHIPS — filters, specialties, removable
+   400→   ============================================================ */
+   401→.chip {
+   402→  display: inline-flex;
+   403→  align-items: center;
+   404→  gap: 7px;
+   405→  font-family: var(--font-mono);
+   406→  font-size: 11px;
+   407→  font-weight: 500;
+   408→  letter-spacing: 0.04em;
+   409→  color: var(--ink-2);
+   410→  background: var(--paper-raised);
+   411→  border: 1px solid var(--rule);
+   412→  padding: 6px 10px;
+   413→  min-height: 30px;
+   414→  white-space: nowrap;
+   415→}
+   416→
+   417→.chip--selectable {
+   418→  cursor: pointer;
+   419→  transition: border-color var(--dur-fast) linear, background var(--dur-fast) linear,
+   420→    color var(--dur-fast) linear;
+   421→}
+   422→
+   423→.chip--selectable:hover {
+   424→  border-color: var(--ink);
+   425→  color: var(--ink);
+   426→}
+   427→
+   428→.chip--on {
+   429→  background: var(--ink);
+   430→  border-color: var(--ink);
+   431→  color: var(--paper);
+   432→}
+   433→
+   434→/* Removable filter chip */
+   435→.chip--removable {
+   436→  background: var(--paper-deep);
+   437→  border-color: var(--ink);
+   438→  color: var(--ink);
+   439→  padding-right: 6px;
+   440→}
+   441→
+   442→.chip__x {
+   443→  display: inline-flex;
+   444→  align-items: center;
+   445→  justify-content: center;
+   446→  width: 18px;
+   447→  height: 18px;
+   448→  border: 1px solid var(--rule);
+   449→  color: var(--ink-2);
+   450→  flex: none;
+   451→}
+   452→
+   453→.chip__x svg {
+   454→  width: 10px;
+   455→  height: 10px;
+   456→}
+   457→
+   458→.chip--removable:hover .chip__x {
+   459→  border-color: var(--accent-deep);
+   460→  color: var(--accent-deep);
+   461→}
+   462→
+   463→.chip--accent {
+   464→  border-color: var(--accent-deep);
+   465→  color: var(--accent-deep);
+   466→  background: var(--accent-wash);
+   467→}
+   468→
+   469→/* Status pills for lessons */
+   470→.pill {
+   471→  display: inline-flex;
+   472→  align-items: center;
+   473→  gap: 6px;
+   474→  font-family: var(--font-mono);
+   475→  font-size: 10px;
+   476→  font-weight: 600;
+   477→  letter-spacing: 0.12em;
+   478→  text-transform: uppercase;
+   479→  padding: 4px 8px;
+   480→  border: 1px solid currentColor;
+   481→  white-space: nowrap;
+   482→}
+   483→
+   484→.pill--upcoming {
+   485→  color: var(--ink);
+   486→  background: var(--paper-raised);
+   487→}
+   488→
+   489→.pill--completed {
+   490→  color: var(--spruce);
+   491→  background: var(--spruce-wash);
+   492→}
+   493→
+   494→.pill--cancelled {
+   495→  color: var(--ink-3);
+   496→  background: transparent;
+   497→  text-decoration: line-through;
+   498→  text-decoration-thickness: 1px;
+   499→}
+   500→
+   501→.pill--live {
+   502→  color: #fdf6f2;
+   503→  background: var(--accent);
+   504→  border-color: var(--accent-deep);
+   505→}
+   506→
+   507→.pill--live::before {
+   508→  content: "";
+   509→  width: 6px;
+   510→  height: 6px;
+   511→  border-radius: 50%;
+   512→  background: #fdf6f2;
+   513→  animation: parla-pulse-dot 1.4s ease-in-out infinite;
+   514→}
+   515→
+   516→/* ============================================================
+   517→   CARDS, panels, stat boxes
+   518→   ============================================================ */
+   519→.panel {
+   520→  background: var(--paper-raised);
+   521→  border: 1px solid var(--ink);
+   522→}
+   523→
+   524→.panel--soft {
+   525→  border-color: var(--rule);
+   526→}
+   527→
+   528→.statbox {
+   529→  border: 1px solid var(--rule);
+   530→  background: var(--paper-raised);
+   531→  padding: var(--sp-4);
+   532→  display: flex;
+   533→  flex-direction: column;
+   534→  gap: 2px;
+   535→}
+   536→
+   537→.statbox .statbox-value {
+   538→  font-family: var(--font-serif);
+   539→  font-variation-settings: "opsz" 72, "WONK" 1;
+   540→  font-weight: 640;
+   541→  font-size: 30px;
+   542→  line-height: 1.1;
+   543→  color: var(--ink);
+   544→}
+   545→
+   546→.statbox .statbox-label {
+   547→  font-family: var(--font-mono);
+   548→  font-size: 10px;
+   549→  font-weight: 600;
+   550→  letter-spacing: 0.14em;
+   551→  text-transform: uppercase;
+   552→  color: var(--ink-3);
+   553→}
+   554→
+   555→/* Data table rows — key/value in print */
+   556→.datarow {
+   557→  display: flex;
+   558→  align-items: baseline;
+   559→  justify-content: space-between;
+   560→  gap: var(--sp-4);
+   561→  padding: 9px 0;
+   562→  border-bottom: 1px solid var(--rule-soft);
+   563→}
+   564→
+   565→.datarow dt {
+   566→  font-family: var(--font-mono);
+   567→  font-size: 10.5px;
+   568→  font-weight: 600;
+   569→  letter-spacing: 0.13em;
+   570→  text-transform: uppercase;
+   571→  color: var(--ink-3);
+   572→}
+   573→
+   574→.datarow dd {
+   575→  font-family: var(--font-mono);
+   576→  font-size: 12.5px;
+   577→  font-weight: 500;
+   578→  color: var(--ink);
+   579→  text-align: right;
+   580→}
+   581→
+   582→/* ============================================================
+   583→   TABS
+   584→   ============================================================ */
+   585→.tabs {
+   586→  display: flex;
+   587→  gap: 0;
+   588→  border-bottom: 1px solid var(--ink);
+   589→}
+   590→
+   591→.tab {
+   592→  font-family: var(--font-mono);
+   593→  font-size: 12px;
+   594→  font-weight: 600;
+   595→  letter-spacing: 0.1em;
+   596→  text-transform: uppercase;
+   597→  color: var(--ink-3);
+   598→  padding: 12px 18px;
+   599→  border: 1px solid transparent;
+   600→  border-bottom: none;
+   601→  position: relative;
+   602→  top: 1px;
+   603→  cursor: pointer;
+   604→  transition: color var(--dur-fast) linear;
+   605→}
+   606→
+   607→.tab:hover {
+   608→  color: var(--ink);
+   609→}
+   610→
+   611→.tab--active {
+   612→  color: var(--ink);
+   613→  background: var(--paper-raised);
+   614→  border-color: var(--ink);
+   615→}
+   616→
+   617→.tab--active::after {
+   618→  content: "";
+   619→  position: absolute;
+   620→  left: -1px;
+   621→  right: -1px;
+   622→  bottom: -2px;
+   623→  height: 2px;
+   624→  background: var(--paper-raised);
+   625→}
+   626→
+   627→.tab .tab-count {
+   628→  font-size: 10px;
+   629→  color: var(--ink-3);
+   630→  margin-left: 6px;
+   631→}
+   632→
+   633→/* ============================================================
+   634→   AVATARS — portraits in a printed frame, or a seeded monogram
+   635→   ============================================================ */
+   636→.avatar {
+   637→  position: relative;
+   638→  border: 1px solid var(--ink);
+   639→  background: var(--paper-deep);
+   640→  overflow: hidden;
+   641→  flex: none;
+   642→  display: flex;
+   643→  align-items: center;
+   644→  justify-content: center;
+   645→}
+   646→
+   647→.avatar img {
+   648→  width: 100%;
+   649→  height: 100%;
+   650→  object-fit: cover;
+   651→  filter: saturate(0.92);
+   652→}
+   653→
+   654→.avatar .avatar-mono {
+   655→  font-family: var(--font-serif);
+   656→  font-variation-settings: "opsz" 144, "WONK" 1;
+   657→  font-weight: 640;
+   658→  color: var(--ink);
+   659→  line-height: 1;
+   660→}
+   661→
+   662→/* Monogram stock patterns — chosen deterministically per tutor */
+   663→.avatar[data-pattern="0"] { background: repeating-linear-gradient(45deg, var(--paper-deep) 0 6px, var(--paper-raised) 6px 12px); }
+   664→.avatar[data-pattern="1"] { background: repeating-linear-gradient(-45deg, var(--paper-deep) 0 5px, #f1ead8 5px 10px); }
+   665→.avatar[data-pattern="2"] { background: radial-gradient(circle at 6px 6px, var(--rule) 1.5px, transparent 1.5px) 0 0 / 12px 12px, var(--paper-raised); }
+   666→
+   667→.avatar-corner {
+   668→  position: absolute;
+   669→  top: 0;
+   670→  right: 0;
+   671→  width: 10px;
+   672→  height: 10px;
+   673→  background: var(--accent);
+   674→  clip-path: polygon(100% 0, 100% 100%, 0 0);
+   675→}
+   676→
+   677→/* ============================================================
+   678→   STARS — mustard ink on the review stamp
+   679→   ============================================================ */
+   680→.stars {
+   681→  display: inline-flex;
+   682→  align-items: center;
+   683→  gap: 2px;
+   684→}
+   685→
+   686→.stars svg {
+   687→  width: 14px;
+   688→  height: 14px;
+   689→  color: var(--mustard);
+   690→}
+   691→
+   692→.stars svg.star--off {
+   693→  color: var(--rule);
+   694→}
+   695→
+   696→.stars .stars-note {
+   697→  margin-left: 8px;
+   698→  font-family: var(--font-mono);
+   699→  font-size: 12px;
+   700→  font-weight: 600;
+   701→  color: var(--ink);
+   702→}
+   703→
+   704→.stars .stars-note span {
+   705→  color: var(--ink-3);
+   706→  font-weight: 400;
+   707→}
+   708→
+   709→/* Interactive star picker */
+   710→.star-picker {
+   711→  display: inline-flex;
+   712→  gap: 8px;
+   713→}
+   714→
+   715→.star-picker button {
+   716→  padding: 4px;
+   717→  border: 1px solid transparent;
+   718→  display: inline-flex;
+   719→}
+   720→
+   721→.star-picker button svg {
+   722→  width: 30px;
+   723→  height: 30px;
+   724→  color: var(--rule);
+   725→  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) linear;
+   726→}
+   727→
+   728→.star-picker button:hover svg {
+   729→  transform: scale(1.12) rotate(-4deg);
+   730→}
+   731→
+   732→.star-picker button.star-on svg {
+   733→  color: var(--mustard);
+   734→}
+   735→
+   736→.star-picker button:focus-visible {
+   737→  outline: 2px solid var(--accent);
+   738→  outline-offset: 2px;
+   739→}
+   740→
+   741→/* Rating distribution bars */
+   742→.rbar-row {
+   743→  display: grid;
+   744→  grid-template-columns: 64px 1fr 34px;
+   745→  align-items: center;
+   746→  gap: 10px;
+   747→  padding: 5px 0;
+   748→}
+   749→
+   750→.rbar-row .rbar-key {
+   751→  font-family: var(--font-mono);
+   752→  font-size: 11px;
+   753→  color: var(--ink-2);
+   754→}
+   755→
+   756→.rbar-row .rbar-track {
+   757→  height: 12px;
+   758→  background: var(--paper-deep);
+   759→  border: 1px solid var(--rule);
+   760→  position: relative;
+   761→}
+   762→
+   763→.rbar-row .rbar-fill {
+   764→  position: absolute;
+   765→  inset: 0 auto 0 0;
+   766→  background: var(--mustard);
+   767→}
+   768→
+   769→.rbar-row .rbar-val {
+   770→  font-family: var(--font-mono);
+   771→  font-size: 11px;
+   772→  color: var(--ink-3);
+   773→  text-align: right;
+   774→}
+   775→
+   776→/* ============================================================
+   777→   SKELETONS — the page while it is still at the printers
+   778→   ============================================================ */
+   779→.skel {
+   780→  position: relative;
+   781→  overflow: hidden;
+   782→  background: var(--paper-deep);
+   783→}
+   784→
+   785→.skel::after {
+   786→  content: "";
+   787→  position: absolute;
+   788→  inset: 0;
+   789→  background: linear-gradient(90deg, transparent, rgba(246, 241, 229, 0.85), transparent);
+   790→  animation: parla-shimmer 1.4s linear infinite;
+   791→}
+   792→
+   793→/* ============================================================
+   794→   EMPTY & ERROR STATES — written, not stubbed
+   795→   ============================================================ */
+   796→.emptystate {
+   797→  border: 1px dashed var(--rule-strong);
+   798→  padding: var(--sp-7) var(--sp-5);
+   799→  text-align: center;
+   800→  display: flex;
+   801→  flex-direction: column;
+   802→  align-items: center;
+   803→  gap: var(--sp-3);
+   804→  max-width: 480px;
+   805→  margin-inline: auto;
+   806→}
+   807→
+   808→.emptystate .emptystate-mark {
+   809→  font-family: var(--font-mono);
+   810→  font-size: 11px;
+   811→  letter-spacing: 0.2em;
+   812→  color: var(--accent-deep);
+   813→  border: 1px solid var(--accent-deep);
+   814→  padding: 5px 10px;
+   815→  text-transform: uppercase;
+   816→}
+   817→
+   818→.emptystate h3 {
+   819→  font-size: 22px;
+   820→}
+   821→
+   822→.emptystate p {
+   823→  font-size: 14.5px;
+   824→  color: var(--ink-2);
+   825→  max-width: 44ch;
+   826→}
+   827→
+   828→/* ============================================================
+   829→   MODALS — solid dim, paper panel, hard shadow, Esc to close
+   830→   ============================================================ */
+   831→.modal-overlay {
+   832→  position: fixed;
+   833→  inset: 0;
+   834→  z-index: var(--z-modal);
+   835→  background: rgba(26, 21, 15, 0.52);
+   836→  display: flex;
+   837→  align-items: flex-start;
+   838→  justify-content: center;
+   839→  overflow-y: auto;
+   840→  padding: clamp(12px, 4vh, 40px) var(--sp-3);
+   841→  animation: parla-fade-up var(--dur-med) var(--ease-out);
+   842→}
+   843→
+   844→.modal-panel {
+   845→  background: var(--paper-raised);
+   846→  border: 1px solid var(--ink);
+   847→  box-shadow: var(--shadow-3);
+   848→  width: 100%;
+   849→  max-width: 560px;
+   850→  margin-bottom: 10vh;
+   851→  animation: parla-pop var(--dur-med) var(--ease-out);
+   852→  display: flex;
+   853→  flex-direction: column;
+   854→}
+   855→
+   856→.modal-panel--wide { max-width: 760px; }
+   857→.modal-panel--slim { max-width: 440px; }
+   858→
+   859→.modal-head {
+   860→  display: flex;
+   861→  align-items: flex-start;
+   862→  justify-content: space-between;
+   863→  gap: var(--sp-4);
+   864→  padding: var(--sp-4) var(--sp-5);
+   865→  border-bottom: 1px solid var(--ink);
+   866→  background: var(--paper);
+   867→}
+   868→
+   869→.modal-head .modal-title {
+   870→  font-family: var(--font-serif);
+   871→  font-variation-settings: "opsz" 72, "WONK" 1;
+   872→  font-weight: 640;
+   873→  font-size: 21px;
+   874→  line-height: 1.15;
+   875→}
+   876→
+   877→.modal-body {
+   878→  padding: var(--sp-5);
+   879→  display: flex;
+   880→  flex-direction: column;
+   881→  gap: var(--sp-4);
+   882→}
+   883→
+   884→.modal-foot {
+   885→  display: flex;
+   886→  align-items: center;
+   887→  justify-content: space-between;
+   888→  gap: var(--sp-3);
+   889→  padding: var(--sp-4) var(--sp-5);
+   890→  border-top: 1px solid var(--rule);
+   891→  background: var(--paper);
+   892→}
+   893→
+   894→.modal-esc {
+   895→  display: inline-flex;
+   896→  align-items: center;
+   897→  gap: 6px;
+   898→  font-family: var(--font-mono);
+   899→  font-size: 10.5px;
+   900→  color: var(--ink-3);
+   901→}
+   902→
+   903→.kbd {
+   904→  font-family: var(--font-mono);
+   905→  font-size: 10px;
+   906→  font-weight: 600;
+   907→  border: 1px solid var(--rule-strong);
+   908→  border-bottom-width: 2px;
+   909→  padding: 2px 5px;
+   910→  color: var(--ink-2);
+   911→  background: var(--paper-raised);
+   912→}
+   913→
+   914→/* ============================================================
+   915→   TOASTS — the morning edition, bottom right
+   916→   ============================================================ */
+   917→.toast-stack {
+   918→  position: fixed;
+   919→  right: var(--sp-4);
+   920→  bottom: var(--sp-4);
+   921→  z-index: var(--z-toast);
+   922→  display: flex;
+   923→  flex-direction: column;
+   924→  gap: 10px;
+   925→  max-width: min(360px, calc(100vw - 32px));
+   926→}
+   927→
+   928→.toast {
+   929→  display: flex;
+   930→  align-items: flex-start;
+   931→  gap: 10px;
+   932→  background: var(--paper-raised);
+   933→  border: 1px solid var(--ink);
+   934→  box-shadow: var(--shadow-2);
+   935→  padding: 12px 14px;
+   936→  animation: parla-fade-up var(--dur-med) var(--ease-out);
+   937→}
+   938→
+   939→.toast .toast-edge {
+   940→  width: 4px;
+   941→  align-self: stretch;
+   942→  background: var(--spruce);
+   943→  flex: none;
+   944→}
+   945→
+   946→.toast--error .toast-edge { background: var(--accent); }
+   947→.toast--info .toast-edge { background: var(--mustard); }
+   948→
+   949→.toast .toast-icon {
+   950→  width: 15px;
+   951→  height: 15px;
+   952→  flex: none;
+   953→  color: var(--spruce);
+   954→  margin-top: 1px;
+   955→}
+   956→
+   957→.toast--error .toast-icon { color: var(--accent); }
+   958→.toast--info .toast-icon { color: var(--mustard); }
+   959→
+   960→.toast .toast-text {
+   961→  font-family: var(--font-mono);
+   962→  font-size: 12px;
+   963→  line-height: 1.5;
+   964→  color: var(--ink);
+   965→}
+   966→
+   967→.toast .toast-x {
+   968→  flex: none;
+   969→  margin-left: auto;
+   970→  color: var(--ink-3);
+   971→  display: inline-flex;
+   972→  padding: 2px;
+   973→}
+   974→
+   975→.toast .toast-x:hover {
+   976→  color: var(--ink);
+   977→}
+   978→
+   979→.toast .toast-x svg {
+   980→  width: 12px;
+   981→  height: 12px;
+   982→}
+   983→
+   984→/* ============================================================
+   985→   SPINNER — a rotating press roller
+   986→   ============================================================ */
+   987→.spin {
+   988→  width: 18px;
+   989→  height: 18px;
+   990→  border: 2px solid var(--rule);
+   991→  border-top-color: var(--ink);
+   992→  border-radius: 50%;
+   993→  animation: parla-spin 0.7s linear infinite;
+   994→  flex: none;
+   995→}
+   996→
+   997→.spin--lg {
+   998→  width: 34px;
+   999→  height: 34px;
+  1000→  border-width: 3px;
+  1001→}
+  1002→
+  1003→/* ============================================================
+  1004→   BARCODE — generated, deterministic per lesson
+  1005→   ============================================================ */
+  1006→.barcode {
+  1007→  display: block;
+  1008→  height: 44px;
+  1009→  width: 100%;
+  1010→}
+  1011→
+  1012→/* ============================================================
+  1013→   MISC
+  1014→   ============================================================ */
+  1015→
+  1016→/* Auth modal internals */
+  1017→.auth-notice {
+  1018→  display: flex;
+  1019→  align-items: flex-start;
+  1020→  gap: 8px;
+  1021→  font-family: var(--font-mono);
+  1022→  font-size: 12px;
+  1023→  line-height: 1.5;
+  1024→  color: var(--accent-deep);
+  1025→  background: var(--accent-wash);
+  1026→  border: 1px solid var(--accent-deep);
+  1027→  padding: 10px 12px;
+  1028→}
+  1029→
+  1030→.auth-notice svg {
+  1031→  flex: none;
+  1032→  margin-top: 2px;
+  1033→}
+  1034→
+  1035→.auth-form {
+  1036→  display: flex;
+  1037→  flex-direction: column;
+  1038→  gap: var(--sp-4);
+  1039→}
+  1040→
+  1041→.pw-wrap {
+  1042→  position: relative;
+  1043→}
+  1044→
+  1045→.pw-toggle {
+  1046→  position: absolute;
+  1047→  right: 8px;
+  1048→  top: 50%;
+  1049→  transform: translateY(-50%);
+  1050→  display: inline-flex;
+  1051→  padding: 6px;
+  1052→  color: var(--ink-3);
+  1053→}
+  1054→
+  1055→.pw-toggle:hover {
+  1056→  color: var(--ink);
+  1057→}
+  1058→
+  1059→.auth-demo-note {
+  1060→  border: 1px dashed var(--rule-strong);
+  1061→  padding: var(--sp-4);
+  1062→  display: flex;
+  1063→  flex-direction: column;
+  1064→  gap: 8px;
+  1065→  background: var(--paper);
+  1066→}
+  1067→
+  1068→.auth-demo-note p {
+  1069→  font-size: 13px;
+  1070→  line-height: 1.6;
+  1071→  color: var(--ink-2);
+  1072→}
+  1073→
+  1074→.auth-demo-note strong {
+  1075→  color: var(--ink);
+  1076→}
+  1077→.online-dot {
+  1078→  display: inline-block;
+  1079→  width: 8px;
+  1080→  height: 8px;
+  1081→  border-radius: 50%;
+  1082→  background: var(--spruce);
+  1083→  border: 1px solid var(--ink);
+  1084→  flex: none;
+  1085→}
+  1086→
+  1087→.price-tag {
+  1088→  display: inline-flex;
+  1089→  align-items: baseline;
+  1090→  gap: 5px;
+  1091→  font-family: var(--font-mono);
+  1092→  color: var(--ink);
+  1093→}
+  1094→
+  1095→.price-tag .price-amount {
+  1096→  font-size: 19px;
+  1097→  font-weight: 600;
+  1098→}
+  1099→
+  1100→.price-tag .price-unit {
+  1101→  font-size: 10.5px;
+  1102→  letter-spacing: 0.08em;
+  1103→  text-transform: uppercase;
+  1104→  color: var(--ink-3);
+  1105→}
+  1106→
+  1107→.price-tag .price-strike {
+  1108→  font-size: 12px;
+  1109→  color: var(--ink-3);
+  1110→  text-decoration: line-through;
+  1111→}
+  1112→
+  1113→.trial-flag {
+  1114→  display: inline-flex;
+  1115→  align-items: center;
+  1116→  gap: 6px;
+  1117→  font-family: var(--font-mono);
+  1118→  font-size: 10px;
+  1119→  font-weight: 600;
+  1120→  letter-spacing: 0.1em;
+  1121→  text-transform: uppercase;
+  1122→  color: var(--spruce);
+  1123→  background: var(--spruce-wash);
+  1124→  border: 1px solid var(--spruce);
+  1125→  padding: 3px 7px;
+  1126→}
+  1127→
+  1128→/* Verified review stamp */
+  1129→.verified {
+  1130→  display: inline-flex;
+  1131→  align-items: center;
+  1132→  gap: 5px;
+  1133→  font-family: var(--font-mono);
+  1134→  font-size: 10px;
+  1135→  letter-spacing: 0.08em;
+  1136→  text-transform: uppercase;
+  1137→  color: var(--spruce);
+  1138→}
+  1139→
+  1140→.verified svg {
+  1141→  width: 12px;
+  1142→  height: 12px;
+  1143→}
+  1144→
+  1145→/* Progress meter — thin ink rule that fills with accent */
+  1146→.meter {
+  1147→  height: 8px;
+  1148→  background: var(--paper-deep);
+  1149→  border: 1px solid var(--rule);
+  1150→  position: relative;
+  1151→  overflow: hidden;
+  1152→}
+  1153→
+  1154→.meter .meter-fill {
+  1155→  position: absolute;
+  1156→  inset: 0 auto 0 0;
+  1157→  background: var(--accent);
+  1158→  transition: width 1s linear;
+  1159→}
+  1160→
+  1161→.meter--ink .meter-fill {
+  1162→  background: var(--ink);
+  1163→}
+  1164→
+  1165→.meter--spruce .meter-fill {
+  1166→  background: var(--spruce);
+  1167→}
+  1168→
