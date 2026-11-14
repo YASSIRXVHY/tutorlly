@@ -1,0 +1,176 @@
+/*
+  Tutorly — tutor card styles (the exemplar component of the marketplace grid).
+  Used on Home (featured), Browse (results grid) and Dashboard (favourites).
+*/
+
+.tcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  animation: fade-up var(--t-med) var(--ease);
+}
+
+/* The whole card is the link — an overlay anchor keeps the markup valid. */
+.tcard-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+.tcard-link:focus-visible {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: -4px;
+}
+
+.tcard-main {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+/* Body text doesn't fight the overlay link for clicks; buttons do. */
+.tcard-body { pointer-events: none; flex: 1; min-width: 0; }
+.tcard-heart,
+.tcard-foot { pointer-events: auto; position: relative; z-index: 2; }
+
+.tcard-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16.5px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.tcard-verified { color: var(--accent-deep); flex: none; }
+
+.tcard-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 3px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  flex-wrap: wrap;
+  row-gap: 2px;
+  min-width: 0;
+}
+.tcard-meta-dot { opacity: 0.5; }
+.tcard-online {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  color: var(--accent-deep);
+  font-size: 12.5px;
+}
+
+.tcard-tagline {
+  margin-top: 7px;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tcard-subjects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.tcard-subject-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: var(--r-pill);
+  background: var(--bg-2);
+  color: var(--ink-2);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+.tcard-subject-chip--native {
+  background: var(--brand-tint);
+  color: var(--brand);
+}
+
+.tcard-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.tcard-price {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.tcard-price-num {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.tcard-price-per {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.tcard-trial {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-radius: var(--r-pill);
+  padding: 3px 8px;
+  margin-top: 4px;
+  width: fit-content;
+}
+
+.tcard-cta { flex: none; }
+
+/* Heart favourite toggle */
+.tcard-heart {
+  position: relative;
+  z-index: 2;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-2);
+  background: var(--surface);
+  color: var(--ink-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+.tcard-heart:hover { color: var(--danger); border-color: var(--danger); }
+.tcard-heart:active { transform: scale(0.9); }
+.tcard-heart--on {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: var(--danger-tint);
+}
+
+@media (max-width: 420px) {
+  .tcard-foot { flex-direction: column; align-items: stretch; }
+  .tcard-cta { width: 100%; }
+}

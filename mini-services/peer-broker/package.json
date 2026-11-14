@@ -1,0 +1,11 @@
+{
+  "name": "tutorly-peer-relay",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "bun --hot index.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

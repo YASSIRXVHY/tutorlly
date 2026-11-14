@@ -1,0 +1,542 @@
+/*
+  Tutorly — the classroom (live P2P room).
+  Prefix: cl-. The room is a focused, app-like space: video tiles, call
+  controls, the shared whiteboard, and a chat rail.
+*/
+
+.page-std {
+  padding: 28px 0 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fade-up var(--t-med) var(--ease);
+}
+
+/* ============ top bar ============ */
+
+.cl-root {
+  padding: 18px 0 56px;
+  animation: fade-up var(--t-med) var(--ease);
+}
+
+.cl-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.cl-back { flex: none; }
+.cl-bar-title {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cl-bar-name {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cl-bar-sub { color: var(--ink-2); font-weight: 600; }
+.cl-bar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+@media (max-width: 640px) {
+  .cl-bar-right .kbd { display: none; }
+  .cl-bar-name { font-size: 15px; }
+}
+
+/* ============ video tiles ============ */
+
+.cl-videos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+}
+.cl-tile {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  min-height: 190px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--brand-deep);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-1);
+}
+.cl-tile video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--brand-deep);
+}
+.cl-tile--waiting { border-color: var(--line-2); }
+.cl-tile--invite { border-style: dashed; border-color: var(--line-2); }
+
+.cl-tile-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 16px;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(30, 214, 95, 0.08), transparent 60%),
+    var(--brand-deep);
+}
+.cl-tile-fallback-name {
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+}
+.cl-tile-fallback-note {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 12px;
+  max-width: 260px;
+  line-height: 1.45;
+}
+.cl-tile-wave { margin-top: 4px; }
+.cl-tile-wave .wavebar { background: var(--accent); }
+
+.cl-tile-label {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  background: rgba(10, 44, 36, 0.72);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  z-index: 2;
+}
+.cl-tile-mic {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--danger);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.cl-invite {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 3;
+}
+@media (max-width: 640px) {
+  .cl-tile { min-height: 150px; aspect-ratio: 16 / 11; }
+  .cl-tile-fallback-note { max-width: 180px; font-size: 11px; }
+  .cl-invite { position: static; margin: 0; }
+  .cl-invite .btn { width: 100%; }
+}
+
+/* ============ call controls ============ */
+
+.cl-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 16px;
+  flex-wrap: wrap;
+}
+.cl-controls-hint {
+  flex: 1;
+  text-align: center;
+  min-width: 180px;
+}
+.cl-endbtn { margin-left: auto; }
+.cl-endask {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  padding: 6px 8px;
+  background: var(--danger-tint);
+  border-radius: var(--r-md);
+  animation: fade-up var(--t-fast) var(--ease);
+}
+.cl-endask-q {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  padding-inline-start: 4px;
+}
+@media (max-width: 640px) {
+  .cl-controls-hint { display: none; }
+  .cl-endbtn, .cl-endask { margin-left: 0; }
+}
+
+/* ============ main: board + rail ============ */
+
+.cl-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 348px;
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 980px) {
+  .cl-main { grid-template-columns: minmax(0, 1fr); }
+}
+
+.cl-board-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.cl-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-1);
+}
+.cl-tools-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cl-tools-count { margin-left: auto; }
+
+.cl-ink {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 1.5px var(--line-2);
+  cursor: pointer;
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+.cl-ink:hover { transform: scale(1.1); }
+.cl-ink--active {
+  box-shadow: 0 0 0 2.5px var(--accent-deep);
+  transform: scale(1.12);
+}
+
+.cl-board-wrap {
+  position: relative;
+  height: clamp(340px, 52vh, 560px);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-1);
+  background: #fff;
+}
+.cl-board { height: clamp(340px, 52vh, 560px); }
+.cl-board-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: crosshair;
+}
+@media (max-width: 980px) {
+  .cl-board-wrap, .cl-board { height: clamp(280px, 46vh, 480px); }
+}
+.cl-board-hint { padding-inline: 4px; }
+
+/* ============ right rail ============ */
+
+.cl-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.cl-railblock {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+  padding: 16px;
+}
+.cl-railblock--chat {
+  padding: 0;
+  display: flex;
+  overflow: hidden;
+}
+.cl-railblock-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+  color: var(--ink-2);
+}
+
+.cl-clock-remain {
+  font-family: var(--font-mono);
+  font-size: 27px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.cl-clock-meter { margin-top: 10px; }
+
+.cl-agenda {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.cl-agenda-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 8px 10px;
+  border-radius: var(--r-md);
+  transition: background var(--t-fast) var(--ease);
+}
+.cl-agenda-item--current {
+  background: var(--brand-tint);
+  box-shadow: inset 0 0 0 1.5px var(--brand-tint);
+}
+.cl-agenda-item--done { opacity: 0.55; }
+.cl-agenda-check {
+  flex: none;
+  margin-top: 1px;
+  color: var(--ink-3);
+  display: inline-flex;
+}
+.cl-agenda-item--current .cl-agenda-check { color: var(--brand); }
+.cl-agenda-item--done .cl-agenda-check { color: var(--accent-deep); }
+.cl-agenda-bullet {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line-2);
+  display: inline-block;
+}
+.cl-agenda-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.cl-agenda-label { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+.cl-agenda-note { font-size: 12px; color: var(--ink-2); }
+.cl-agenda-time { margin-top: 2px; }
+
+.cl-notes { width: 100%; font-size: 13.5px; }
+.cl-railnote { padding-inline: 4px; }
+
+/* ============ chat ============ */
+
+.cl-chat {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 300px;
+  max-height: 440px;
+  min-width: 0;
+}
+.cl-chat-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-warm);
+  color: var(--ink-2);
+}
+.cl-chat-count { margin-left: auto; }
+.cl-chat-scroll {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 14px;
+}
+.cl-chat-empty {
+  margin: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px;
+}
+.cl-chat-empty p {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  max-width: 240px;
+}
+.cl-chat-system {
+  text-align: center;
+  margin: 8px 0;
+}
+.cl-chat-line {
+  max-width: 88%;
+  margin-bottom: 10px;
+  align-self: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px 14px 14px 4px;
+  padding: 8px 12px 7px;
+}
+.cl-chat-line--mine {
+  align-self: flex-end;
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+  border-radius: 14px 14px 4px 14px;
+}
+.cl-chat-line-name {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-3);
+  margin-bottom: 2px;
+}
+.cl-chat-line--mine .cl-chat-line-name { color: rgba(255, 255, 255, 0.66); }
+.cl-chat-line p {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+.cl-chat-line--mine p { color: #fff; }
+.cl-chat-line-time {
+  display: block;
+  font-size: 10px;
+  color: var(--ink-3);
+  opacity: 0.75;
+  margin-top: 3px;
+}
+.cl-chat-line--mine .cl-chat-line-time { color: rgba(255, 255, 255, 0.6); }
+
+.cl-chat-typing {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 10px 12px;
+  align-self: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px 14px 14px 4px;
+}
+.cl-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-3);
+  animation: cl-blink 1.1s infinite;
+}
+.cl-dot:nth-child(2) { animation-delay: 0.18s; }
+.cl-dot:nth-child(3) { animation-delay: 0.36s; }
+@keyframes cl-blink {
+  0%, 80%, 100% { opacity: 0.25; }
+  40% { opacity: 1; }
+}
+
+.cl-chat-composer {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid var(--line);
+  background: var(--surface-warm);
+}
+.cl-chat-composer textarea {
+  flex: 1;
+  min-width: 0;
+  border: 1.5px solid var(--line-2);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 13.5px;
+  line-height: 1.4;
+  padding: 9px 11px;
+  resize: none;
+}
+.cl-chat-composer textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-tint);
+}
+.cl-chat-send {
+  flex: none;
+  width: 40px;
+  padding: 0;
+}
+.cl-chat-note {
+  padding: 12px 14px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  border-top: 1px solid var(--line);
+}
+
+/* ============ waiting room + archive ============ */
+
+.cl-gate {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.cl-gate-title { font-size: 24px; }
+.cl-gate-sub { color: var(--ink-2); font-weight: 600; }
+.cl-gate-clock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+.cl-gate-count {
+  font-size: 46px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--brand);
+}
+.cl-gate-meter { width: 100%; }
+.cl-gate-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.cl-archive {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.cl-archive-title { font-size: 24px; }
+.cl-archive-p { font-size: 14.5px; line-height: 1.6; }
+.cl-archive-notes {
+  margin: 0;
+  padding: 14px 16px;
+  border-left: 3px solid var(--accent-deep);
+  background: var(--surface-warm);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+}
+.cl-archive-notes p { font-size: 14px; margin-top: 6px; }
+.cl-archive-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}

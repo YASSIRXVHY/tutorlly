@@ -38,6 +38,9 @@
   ],
   "exclude": [
     "node_modules",
-    "vite-standalone"
+    "vite-standalone",
+    "examples",
+    "skills",
+    "mini-services"
   ]
 }
