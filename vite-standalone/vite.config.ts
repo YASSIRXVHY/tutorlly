@@ -5,7 +5,7 @@ import react from "@vitejs/plugin-react";
 // The full ../src/tutorly tree and the portrait assets are already copied in
 // (src/tutorly + public/), so: npm install && npm run dev works as-is.
 export default defineConfig({
-  base: process.env.VERCEL ? "/vite/" : "/",
+  base: "./",
   plugins: [react()],
   css: {
     postcss: {
