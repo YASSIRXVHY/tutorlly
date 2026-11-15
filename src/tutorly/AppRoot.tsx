@@ -6,7 +6,7 @@
  * and the toast/search/auth overlay systems. The classroom route renders
  * with its own focused chrome (no navbar/footer) — a room, not a page.
  */
-import { Component, useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
+import { Component, useSyncExternalStore, type ReactNode } from "react";
 import { TriangleAlert, GraduationCap, RotateCcw } from "lucide-react";
 
 import "./styles/tokens.css";

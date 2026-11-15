@@ -7,10 +7,9 @@
  * languages the applicant speaks.
  */
 import { Plus, X } from "lucide-react";
-import type { TeachDraft, Level } from "../../data/community";
 import { LANG_TEACH_LEVELS, NATIVE_LANGUAGES, SPOKEN_LEVELS } from "../../data/community";
 import { CATEGORIES, SPECIALTIES, subjectsForCategory, subjectById } from "../../data/subjects";
-import { subjectCodeMatches, spokenLabel } from "../../data/tutors";
+import { subjectCodeMatches, spokenLabel, type Level } from "../../data/tutors";
 import { ChipToggle } from "./teachFields";
 import type { StepProps } from "./StepBasics";
 
@@ -65,7 +64,7 @@ export function StepSubjects({ draft, patch, errors }: StepProps) {
 
   const languageSubjects = draft.subjects
     .map((id) => subjectById(id))
-    .filter((s) => s && s.cat === "languages");
+    .filter((s): s is NonNullable<typeof s> => Boolean(s && s.cat === "languages"));
 
   return (
     <div>

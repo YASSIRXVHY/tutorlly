@@ -7,7 +7,6 @@
 import type { Tutor } from "./tutors";
 import { rng } from "../utils/rng";
 import { primarySubject, tutorExams } from "./tutors";
-import { subjectById } from "./subjects";
 
 export interface Review {
   id: string;

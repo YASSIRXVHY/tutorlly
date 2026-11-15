@@ -6,7 +6,6 @@
  * headline and the bio. Counters keep the copy inside its honest limits.
  */
 import { Lightbulb, TrendingUp } from "lucide-react";
-import type { TeachDraft } from "../../data/community";
 import { TUTORS } from "../../data/tutors";
 import { subjectById } from "../../data/subjects";
 import { formatMoney } from "../../utils/misc";
