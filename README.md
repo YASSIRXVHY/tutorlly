@@ -164,3 +164,13 @@ vite-standalone/           the pure Vite + React 18 port (see above)
 - **Honesty as a design rule:** seeded simulations are labelled as seeded,
   new tutors start at zero with "first review pending" states, the payment
   is labelled simulated — nothing pretends to be more than it is.
+
+---
+
+## License & Copyright
+
+**Proprietary & Closed Source. All Rights Reserved.**  
+Copyright © 2026 Yassir ([@YASSIRXVHY](https://github.com/YASSIRXVHY)) and Yassir-YSR ([@yassirelhajjami](https://github.com/yassirelhajjami)).
+
+This project and its source code are strictly proprietary. Unauthorized copying, downloading, modification, redistribution, or commercial use of this repository, in whole or in part, is strictly prohibited. See [LICENSE](file:///c:/Users/s/OneDrive/Desktop/tutorlly/LICENSE) for full legal terms.
+
